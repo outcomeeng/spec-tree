@@ -11,14 +11,7 @@ Spec Tree skills for spec-driven development
 npx skills add outcomeeng/spec-tree
 ```
 
-## Prerequisites
-
-Install these first:
-
-- `npx skills add outcomeeng/foundation`
-
-  - outcomeeng/foundation (for /testing methodology)
-## Skills (8)
+## Skills (10)
 
 | Skill | Description |
 | ----- | ----------- |
@@ -29,6 +22,8 @@ Install these first:
 | `contextualizing` | asking about status, progress, or what exists in the spec tree |
 | `decomposing` | breaking down, splitting, scoping, or structuring spec tree nodes |
 | `refactoring` | moving nodes, re-scoping content, or extracting shared enablers |
+| `reviewing-tests` | reviewing tests for evidentiary value and spec compliance |
+| `testing` | ALWAYS invoke this skill before writing tests or when learning the testing approach |
 | `understanding` | ALWAYS invoke this skill before any spec-tree work to load methodology |
 
 ## License
