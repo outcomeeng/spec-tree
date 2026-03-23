@@ -11,12 +11,13 @@ Spec Tree skills for spec-driven development
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (10)
+## Skills (11)
 
 | Skill | Description |
 | ----- | ----------- |
 | `aligning` | reviewing, auditing, or checking spec file conformance |
 | `authoring` | adding, defining, or creating specs, decisions, or nodes |
+| `bootstrapping` | setting up a new spec tree or when /authoring detects an empty spx/ directory |
 | `coding` | ALWAYS invoke this skill before implementing any spec-tree work item |
 | `committing-changes` | committing changes or when user says "commit" |
 | `contextualizing` | asking about status, progress, or what exists in the spec tree |
