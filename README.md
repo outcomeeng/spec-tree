@@ -16,6 +16,7 @@ npx skills add outcomeeng/spec-tree
 | Skill | Description |
 | ----- | ----------- |
 | `aligning` | reviewing, auditing, or checking spec file conformance |
+| `auditing-tests` | auditing test evidence quality or verifying tests cover spec assertions |
 | `authoring` | adding, defining, or creating specs, decisions, or nodes |
 | `bootstrapping` | setting up a new spec tree or when /authoring detects an empty spx/ directory |
 | `coding` | ALWAYS invoke this skill before implementing any spec-tree work item |
@@ -23,7 +24,6 @@ npx skills add outcomeeng/spec-tree
 | `contextualizing` | asking about status, progress, or what exists in the spec tree |
 | `decomposing` | breaking down, splitting, scoping, or structuring spec tree nodes |
 | `refactoring` | moving nodes, re-scoping content, or extracting shared enablers |
-| `reviewing-tests` | reviewing tests for evidentiary value and spec compliance |
 | `testing` | ALWAYS invoke this skill before writing tests or when learning the testing approach |
 | `understanding` | ALWAYS invoke this skill before any spec-tree work to load methodology |
 
