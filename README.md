@@ -11,11 +11,12 @@ Spec Tree skills for spec-driven development
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (11)
+## Skills (12)
 
 | Skill | Description |
 | ----- | ----------- |
 | `aligning` | reviewing, auditing, or checking spec file conformance |
+| `auditing-product-decisions` | auditing PDRs or product constraint documents |
 | `auditing-tests` | auditing test evidence quality or verifying tests cover spec assertions |
 | `authoring` | adding, defining, or creating specs, decisions, or nodes |
 | `bootstrapping` | setting up a new spec tree or when /authoring detects an empty spx/ directory |
