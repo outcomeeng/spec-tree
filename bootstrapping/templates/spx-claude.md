@@ -14,14 +14,18 @@ Two node types at any depth:
 spx/
   {product-name}.product.md            # Product spec (root)
   NN-{slug}.adr.md                     # Architecture decision
-  NN-{slug}.pdr.md                     # Product constraint
+  NN-{slug}.pdr.md                     # Product decision
   NN-{slug}.enabler/                   # Shared infrastructure
     {slug}.md                          # Spec file
     tests/                             # Co-located tests
+    PLAN.md                            # Escape hatch: deferred plan (optional)
+    ISSUES.md                          # Escape hatch: known issues (optional)
     NN-{slug}.{enabler|outcome}/       # Children (any depth)
   NN-{slug}.outcome/                   # Hypothesis + assertions
     {slug}.md                          # Spec file
     tests/                             # Co-located tests
+    PLAN.md                            # Escape hatch: deferred plan (optional)
+    ISSUES.md                          # Escape hatch: known issues (optional)
 ```
 
 ---
@@ -35,6 +39,7 @@ spx/
 5. **Deterministic context**: The tree path defines what context an agent receives.
 6. **Decision records win by hierarchy**: If a spec contradicts an ADR or PDR in its ancestry, the spec is wrong. Rewrite the spec to align with the decision record before any implementation work.
 7. **Decision records updated in-place**: When a decision changes, update the ADR/PDR directly. No "superseded" workflow.
+8. **Escape hatches**: PLAN.md and ISSUES.md in node directories are non-durable files left by `/handoff`. They contain deferred plans or known issues. `/contextualizing` reads them automatically. Remove when resolved.
 
 ---
 
@@ -106,7 +111,7 @@ Review, audit, or quality check specs. Find contradictions or gaps.
 | "Move this under that"   | `/refactoring`     | Rename directories manually |
 | "Check these specs"      | `/aligning`        | Review without methodology  |
 | "Write tests for this"   | `/testing`         | Write tests without spec    |
-| "Start the TDD flow"     | `/coding`          | Code without architecture   |
+| "Start the TDD flow"     | `/applying`        | Code without architecture   |
 
 ---
 
