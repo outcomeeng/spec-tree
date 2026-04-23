@@ -14,28 +14,6 @@ This is full injection — every collected document is read into the conversatio
 
 </objective>
 
-<quick_start>
-
-**PREREQUISITE**: Check for `<SPEC_TREE_FOUNDATION>` marker. If absent, invoke `/understanding` first.
-
-Invoke with the **full path** from `spx/` to the target node:
-
-```text
-/contextualizing 21-infra.enabler/32-parser.outcome
-```
-
-**Never use bare node names** — indices are sibling-unique, not globally unique:
-
-```text
-# Wrong: ambiguous
-/contextualizing 32-parser.outcome
-
-# Right: unambiguous
-/contextualizing 21-infra.enabler/32-parser.outcome
-```
-
-</quick_start>
-
 <essential_principles>
 
 **COMPLETE CONTEXT OR ABORT. NO EXCEPTIONS.**
@@ -46,6 +24,9 @@ Invoke with the **full path** from `spx/` to the target node:
 - All ADRs and PDRs at all levels must be read — no skipping based on title relevance
 - Lower-index siblings' specs must be read at each directory level — they constrain the target
 - Test files are excluded — context is about specs and decisions, not evidence
+- **Always use full path** from `spx/` to target — indices are sibling-unique, not globally unique:
+  - Wrong: `/contextualizing 32-parser.outcome`
+  - Right: `/contextualizing 21-infra.enabler/32-parser.outcome`
 
 **BOOTSTRAP MODE**: When the target path doesn't exist yet and the operation is authoring, return an empty manifest with `bootstrap=true` instead of aborting. This allows creating the first node in an empty tree.
 
@@ -53,9 +34,18 @@ Invoke with the **full path** from `spx/` to the target node:
 
 <workflow>
 
-<phase name="locate">
+<step name="gate">
 
-**Phase 0: Locate target node**
+**Step GATE: Check foundation**
+
+Check conversation for `<SPEC_TREE_FOUNDATION>` marker.
+If absent → STOP. Invoke `/understanding` first, then resume from Step 0.
+
+</step>
+
+<step name="locate">
+
+**Step 0: Locate target node**
 
 ```bash
 # Find the product file
@@ -74,11 +64,11 @@ If the target path doesn't exist:
 
 Extract the path segments from product root to target. Each segment is a directory to walk.
 
-</phase>
+</step>
 
-<phase name="product">
+<step name="product">
 
-**Phase 1: Load product-level context**
+**Step 1: Load product-level context**
 
 ```bash
 # Read product spec
@@ -96,11 +86,11 @@ Glob: "spx/*-*.pdr.md"
 
 **Verification**: Count files returned by globs. Count files actually read. These must match.
 
-</phase>
+</step>
 
-<phase name="walk">
+<step name="walk">
 
-**Phase 2: Walk the tree from root to target**
+**Step 2: Walk the tree from root to target**
 
 For each directory along the path from product root to the target node:
 
@@ -140,11 +130,11 @@ Lower-index siblings' ADRs/PDRs are NOT read — only the sibling's spec itself.
 
 Siblings with the same index as the target are independent — they neither constrain nor are constrained by the target. List them but do not read.
 
-</phase>
+</step>
 
-<phase name="target">
+<step name="target">
 
-**Phase 3: Load target node context**
+**Step 3: Load target node context**
 
 ```bash
 # Read target spec
@@ -167,11 +157,11 @@ Glob: "spx/{target-path}/ISSUES.md"
 
 **If PLAN.md or ISSUES.md exist, read them.** These are non-durable escape hatches left by previous agents via `/handoff`. They contain deferred plans or known issues that the next agent must be aware of.
 
-</phase>
+</step>
 
-<phase name="summary">
+<step name="summary">
 
-**Phase 4: Emit context marker and summary**
+**Step 4: Emit context marker and summary**
 
 Emit the `<SPEC_TREE_CONTEXT>` marker with all collected information:
 
@@ -204,7 +194,7 @@ Higher-index siblings (depend on target): {list}
 </SPEC_TREE_CONTEXT>
 ```
 
-</phase>
+</step>
 
 </workflow>
 
@@ -246,6 +236,7 @@ Agent read ALL siblings including higher-index ones. Higher-index siblings may d
 
 Context loading is complete when:
 
+- [ ] `<SPEC_TREE_FOUNDATION>` marker present (loaded via `/understanding`)
 - [ ] Product spec located and read
 - [ ] All product-level ADRs/PDRs read (glob count = read count)
 - [ ] Every ancestor along the path: spec read, ADRs/PDRs read

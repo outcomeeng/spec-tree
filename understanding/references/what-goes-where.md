@@ -2,15 +2,16 @@
 
 Every artifact in the Spec Tree has a specific purpose. Content placed in the wrong artifact creates confusion and duplication.
 
-| Artifact type    | Purpose                    | Contains                         | Verified by |
-| ---------------- | -------------------------- | -------------------------------- | ----------- |
-| **ADR**          | GOVERNS how (architecture) | Decisions, rationale, invariants | ADR audit   |
-| **PDR**          | GOVERNS what (product)     | Decisions, product invariants    | PDR audit   |
-| **Enabler spec** | DESCRIBES infrastructure   | What it provides, assertions     | Tests       |
-| **Outcome spec** | DESCRIBES hypothesis       | Outcome belief, assertions       | Tests       |
-| **Test**         | PROVES assertions          | Test code                        | Test runner |
-| **PLAN.md**      | DEFERS remaining steps     | Concrete plan for a node         | Next agent  |
-| **ISSUES.md**    | DEFERS known issues        | Gaps, bugs, untestable specs     | Next agent  |
+| Artifact type    | Purpose                    | Contains                         | Verified by       |
+| ---------------- | -------------------------- | -------------------------------- | ----------------- |
+| **ADR**          | GOVERNS how (architecture) | Decisions, rationale, invariants | ADR audit         |
+| **PDR**          | GOVERNS what (product)     | Decisions, product invariants    | PDR audit         |
+| **Enabler spec** | DESCRIBES infrastructure   | What it provides, assertions     | Tests             |
+| **Outcome spec** | DESCRIBES hypothesis       | Outcome belief, assertions       | Tests             |
+| **Test**         | PROVES assertions          | Test code                        | Test runner       |
+| **Enforcement**  | CONSTRAINS structure       | Lint rules, AST selectors        | Tests on the rule |
+| **PLAN.md**      | DEFERS remaining steps     | Concrete plan for a node         | Next agent        |
+| **ISSUES.md**    | DEFERS known issues        | Gaps, bugs, untestable specs     | Next agent        |
 
 </overview>
 
@@ -98,6 +99,20 @@ Every artifact in the Spec Tree has a specific purpose. Content placed in the wr
 
 </test_files>
 
+<enforcement>
+
+**Purpose:** CONSTRAINS code structure via automated static analysis.
+
+**Contains:** Lint rules (custom rule modules, AST selectors, pattern matchers) registered in the validation pipeline.
+
+**How it differs from tests:** A lint rule walks AST nodes and matches patterns across all files in its glob — it does not import a module or exercise specific behavior.
+
+**Verified by:** A `[test]` that exercises the rule against violating fixtures and asserts the violation is detected. The rule's presence in the validation pipeline is an operational concern, confirmed by the pipeline running green on the codebase.
+
+**Does NOT contain:** Spec content, decision rationale, or test code.
+
+</enforcement>
+
 <escape_hatches>
 
 **Purpose:** Non-durable node-local files left by `/handoff` for the next agent. They are escape hatches, not homes — prefer amending specs or fixing issues directly.
@@ -115,28 +130,30 @@ Every artifact in the Spec Tree has a specific purpose. Content placed in the wr
 <flow>
 
 ```text
-ADR/PDR ──governs──→ Spec ──asserts──→ Test
-                      │                  │
-                      │                  │
-                 "what should       "does it
-                  be true"          hold?"
+                             ┌──[test]────→ Test
+                             │               "does it hold?"
+ADR/PDR ──governs──→ Spec ──┤
+                             │
+                             └──[review]───→ Human/agent
+                                             "does the design follow W?"
 ```
 
 </flow>
 
 <common_misplacements>
 
-| Content                  | Wrong location | Correct location  |
-| ------------------------ | -------------- | ----------------- |
-| Architecture choice      | Spec           | ADR               |
-| Product decision         | Spec           | PDR               |
-| Outcome hypothesis       | ADR            | Outcome spec      |
-| Test reference           | ADR/PDR        | Spec assertions   |
-| Implementation detail    | Spec           | Code (not spec)   |
-| "How to build it"        | Spec           | ADR or code       |
-| "What users can rely on" | Spec           | PDR               |
-| Cross-cutting invariant  | Child spec     | Ancestor spec     |
-| Remaining work steps     | Session file   | PLAN.md in node   |
-| Known deferred issues    | Session file   | ISSUES.md in node |
+| Content                  | Wrong location | Correct location          |
+| ------------------------ | -------------- | ------------------------- |
+| Architecture choice      | Spec           | ADR                       |
+| Product decision         | Spec           | PDR                       |
+| Outcome hypothesis       | ADR            | Outcome spec              |
+| Test reference           | ADR/PDR        | Spec assertions           |
+| Implementation detail    | Spec           | Code (not spec)           |
+| "How to build it"        | Spec           | ADR or code               |
+| "What users can rely on" | Spec           | PDR                       |
+| Enforceable constraint   | `[review]`     | `[test]` on the lint rule |
+| Cross-cutting invariant  | Child spec     | Ancestor spec             |
+| Remaining work steps     | Session file   | PLAN.md in node           |
+| Known deferred issues    | Session file   | ISSUES.md in node         |
 
 </common_misplacements>

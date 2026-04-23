@@ -1,0 +1,91 @@
+---
+name: handing-off
+description: ALWAYS invoke this skill when closing a spec-tree work session, writing a handoff, preparing continuation context for another agent, or releasing work into the shared session queue. NEVER create a spec-tree handoff without this skill.
+---
+
+<context>
+**Working Directory:**
+!`pwd`
+
+**Git Status:**
+!`git status --short || echo "Not in a git repo"`
+
+**Current Branch:**
+!`git branch --show-current || echo "Not in a git repo"`
+
+**Current Sessions:**
+!`spx session list || echo 'Ask user to install spx CLI: "npm install --global @outcomeeng/spx"'`
+
+**Spec Tree:**
+!`ls spx/*.product.md 2>/dev/null || echo "No spec tree found"`
+
+</context>
+
+<objective>
+Handoff is proper session closure, not note-taking. Reflect deeply on what was learned before persisting anything — four sequential workflows enforce the discipline that produces the right persistence decisions. The session file is a thin coordination envelope — the last resort for information that can't live anywhere else.
+
+**Reflect, then persist, then commit, then hand off.** Workflow 02 (reflect) is the most important step. Without it, Claude dumps a narrative instead of making durable persistence decisions. Stale PLAN.md and ISSUES.md files are worse than none. A handoff with uncommitted session-owned work is incomplete.
+
+</objective>
+
+<persistence_hierarchy>
+All information discovered during a session falls into one of four tiers. Persist to the HIGHEST applicable tier.
+
+| Tier | Where                                   | Durability   | When to use                                                                       |
+| ---- | --------------------------------------- | ------------ | --------------------------------------------------------------------------------- |
+| 1    | Spec tree (`spx/`)                      | Durable      | Spec amendments, test files, assertion updates                                    |
+| 2    | Methodology (skills, CLAUDE.md, memory) | Durable      | Reusable patterns, user preferences, coding gotchas                               |
+| 3    | Node-local (PLAN.md, ISSUES.md)         | Escape hatch | Remaining steps, known gaps — non-durable but discoverable via `/contextualizing` |
+| 4    | Session file (`.spx/sessions/todo/`)    | Ephemeral    | Coordination only: node list, skill checklist, cross-cutting context              |
+
+**Tier 3 is an escape hatch, not a home.** MUST use `AskUserQuestion` before writing PLAN.md or ISSUES.md.
+
+Git commit is not a fifth tier. It is the final persistence operation after approved durable writes are complete. Session-owned spec edits, test edits, code edits, and escape hatches MUST be committed before session closure.
+
+</persistence_hierarchy>
+
+<multi_agent_awareness>
+**Multiple agents may be working in parallel.** The todo queue contains work for ALL agents across ALL worktrees, not just this session.
+
+- `todo` = Shared work queue (NEVER archive others' work)
+- `doing` = Claimed by active agents (only archive YOUR claimed session)
+- `archive` = Completed work (safe to prune old entries)
+
+</multi_agent_awareness>
+
+<arguments>
+**`--no-session`**: Run the full reflection and persistence protocol, including the final commit, but skip session file creation in workflow 04. All approved items are persisted to their durable targets and committed. Unapproved items are dropped.
+
+Use `--no-session` (or the `/release` alias) when closing a session without handing off to another agent.
+
+**`--prune`**: After successfully writing the new handoff, delete old archive sessions. Does NOT touch the todo queue. Ignored when `--no-session` is set.
+
+Check `$ARGUMENTS` for these flags before starting workflow 01.
+
+</arguments>
+
+<workflows>
+Execute all four workflows in sequence. Each workflow has its own success criteria — do not proceed to the next until the current one is complete.
+
+1. `workflows/01-anchor-to-nodes.md` — identify every node worked on this session
+2. `workflows/02-reflect.md` — work through five perspectives internally
+3. `workflows/03-propose.md` — present persistence proposal to user for approval
+4. `workflows/04-execute.md` — write approved items, commit, create session file
+
+</workflows>
+
+<success_criteria>
+
+A successful handoff:
+
+- [ ] All anchored nodes identified with status and TDD position (workflow 01)
+- [ ] All five reflection perspectives worked through (workflow 02)
+- [ ] Existing PLAN.md and ISSUES.md checked for staleness — updated or removed if stale (workflow 02)
+- [ ] Combined persistence proposal presented to user and approved items written (workflows 03–04)
+- [ ] Session-owned spec, test, code, and escape-hatch changes committed before closure (workflow 04)
+- [ ] Committed vs uncommitted state recorded for each node (workflow 04)
+- [ ] Session file created via `spx session handoff` (workflow 04, unless `--no-session`)
+- [ ] Claimed doing session archived using the session id from the current pickup marker (workflow 04)
+- [ ] Session file is a thin coordination envelope — bulk of value persisted durably
+
+</success_criteria>

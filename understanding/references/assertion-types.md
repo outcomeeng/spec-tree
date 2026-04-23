@@ -1,5 +1,5 @@
 <overview>
-Every assertion in a node spec must be one of five structured types. The first four are machine-testable. Compliance captures constraints requiring human or agent judgment.
+Every assertion in a node spec must be one of five structured types. The first four default to `[test]` evidence. Compliance assertions choose between `[test]` and `[review]` depending on whether the constraint can be verified by an automated test or requires human judgment.
 
 | Type            | Quantifier                      | Test strategy   | Use when                                      |
 | --------------- | ------------------------------- | --------------- | --------------------------------------------- |
@@ -90,7 +90,7 @@ A compliance assertion states a rule the node's output must always or never exhi
 - NEVER: reference XiperHLS — deferred per PDR-15 ([test](tests/open-source.unit.test.{ext}))
 ```
 
-**Test strategy:** Review (`[review]`) for semantic constraints requiring human or agent judgment. Test (`[test]`) when the constraint is automatable (e.g., string absence).
+**Test strategy:** Review (`[review]`) for semantic constraints requiring human or agent judgment. Test (`[test]`) when the constraint is automatable — including tests that exercise a lint rule against violating fixtures (see `<evidence_mechanisms>`).
 
 **When to use:** PDR/ADR compliance rules, semantic constraints that can't be falsified by regex, behavioral boundaries that define what the node must not do.
 
@@ -132,3 +132,20 @@ A single spec can contain assertions of different types. Group them under typed 
 Only include headings for assertion types that apply.
 
 </mixing_types>
+
+<evidence_mechanisms>
+
+Every assertion links to one of two evidence mechanisms:
+
+| Mechanism  | Tag                      | Who decides             | What it proves                                                            | Verified by |
+| ---------- | ------------------------ | ----------------------- | ------------------------------------------------------------------------- | ----------- |
+| **Test**   | `([test](path/to/test))` | Automated test          | "The code does X" — exercises behavior with real coupling                 | Test runner |
+| **Review** | `([review])`             | Human or agent judgment | "The design follows principle W" — semantic constraint no tool can verify | Audit skill |
+
+**Test** is the default for Scenario, Mapping, Conformance, and Property assertions, and for Compliance rules with automated verification. The test file exercises behavior with direct or indirect coupling to the module under test.
+
+For structural constraints enforced by a lint rule, the `[test]` evidence is a test that exercises the rule against violating fixtures and asserts the violation is detected. The rule's presence in the validation pipeline is a separate operational concern — confirmed by the pipeline running green on the codebase — not by the spec assertion itself.
+
+**Review** is for semantic constraints that no automated check can verify — "the design follows this principle", "the API feels intuitive", "the copy matches brand voice". A review tag is valid evidence at the time of review; it does not re-verify itself as the code changes.
+
+</evidence_mechanisms>

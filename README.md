@@ -1,9 +1,9 @@
 # spec-tree
 
-Spec Tree skills for spec-driven development
+Spec Tree methodology skills for Outcome Engineering
 
-> This repo is auto-generated from [outcomeeng/claude](https://github.com/outcomeeng/claude).
-> For the Claude Code plugin marketplace, use `claude plugin marketplace add outcomeeng/claude`.
+> This repo is auto-generated from [outcomeeng/plugins](https://github.com/outcomeeng/plugins).
+> For the shared marketplace, use `claude plugin marketplace add outcomeeng/plugins` or `codex plugin marketplace add outcomeeng/plugins`.
 
 ## Install
 
@@ -11,7 +11,7 @@ Spec Tree skills for spec-driven development
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (12)
+## Skills (16)
 
 | Skill | Description |
 | ----- | ----------- |
@@ -24,7 +24,11 @@ npx skills add outcomeeng/spec-tree
 | `committing-changes` | committing changes or when user says "commit" |
 | `contextualizing` | asking about status, progress, or what exists in the spec tree |
 | `decomposing` | breaking down, splitting, scoping, or structuring spec tree nodes |
+| `handing-off` | closing a spec-tree work session, writing a handoff, preparing continuation context for another agent, or releasing work into the shared session queue |
+| `interviewing` | ALWAYS invoke BEFORE asking the user anything while creating or modifying any artifact (spec, ADR, PDR, test, code, doc) |
+| `picking-up` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another agent's saved context |
 | `refactoring` | moving nodes, re-scoping content, or extracting shared enablers |
+| `refocusing` | running ad hoc commands, writing debug scripts, or writing code without a spec |
 | `testing` | ALWAYS invoke this skill before writing tests or when learning the testing approach |
 | `understanding` | ALWAYS invoke this skill before any spec-tree work to load methodology |
 
