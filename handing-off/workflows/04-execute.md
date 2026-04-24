@@ -48,18 +48,9 @@ For each anchored node, check `git status` and record:
 <resolve_session_scope>
 Determine the authoritative set of in-scope sessions plus any mid-session artifact to reconcile.
 
-1. **Read the running scope marker**: search the conversation for the most recent `<SESSION_SCOPE ids="a,b,c">` marker. Each id is a user-confirmed pickup the agent must close.
-2. **Fallback when no scope marker exists**: context compaction or a malformed marker can drop `<SESSION_SCOPE>`. Rebuild additively:
-   - Collect every `<PICKUP_CLAIM id="...">` and `<PICKUP_CHECKPOINT id="...">` emitted since the last closure marker in the conversation.
-   - Deduplicate by id; the resulting set is the resolved scope.
-   - If the set has **one** id, proceed.
-   - If the set has **more than one** id, present the list to the user and ask them to confirm the full scope before continuing. NEVER silently collapse to the most recent pickup.
-   - If the set is **empty**, check for pickup evidence: `spx session list --status doing` showing sessions this worktree may own, or references in the conversation to a claimed session. If any such evidence exists, STOP and ask the user to confirm scope. Only declare scope empty when there is clear evidence no pickup happened in this conversation (fresh handoff).
-3. **Locate mid-session artifacts**: did this conversation run `spx session handoff` earlier? Collect every handoff id printed by `spx session handoff` during this conversation. Cross-reference against `spx session list --status todo`:
-   - **Zero artifacts in TODO** → no reconciliation needed; Path A or C will apply.
-   - **Exactly one artifact in TODO** → it becomes the rewrite-in-place candidate for Path B.
-   - **More than one artifact in TODO** → STOP. Present the list to the user and ask which is the canonical continuation. Archive only the artifacts this conversation created; never touch artifacts created by other conversations.
-4. **Reconcile with workflow 02**: the scope must match `<perspective_session_scope>`. If the user named additional sessions, add them. If any session is **ambiguous**, STOP and resolve with the user before proceeding.
+**Run the canonical scope-resolution algorithm.** Read `references/scope-resolution.md` and follow every step. The algorithm covers: reading `<SESSION_SCOPE>`, the fallback recovery ladder (checkpoint scope attribute → additive rebuild), the scope-growth rule, mid-session artifact location, and the four-way classification. The reference is the single source of truth — do not reproduce the steps here.
+
+**Cross-check against workflow 03 approval.** The resolved scope must match the session-disposition header the user approved. If the user named additional sessions during workflow 03, add them before archiving. If any session is classified **ambiguous**, STOP and resolve with the user before proceeding.
 
 The resolved scope is the authoritative archive list for the rest of this workflow. Mid-session artifacts are tracked separately — at most one is rewritten in place; the rest are archived only if this conversation created them.
 
@@ -70,7 +61,7 @@ The resolved scope is the authoritative archive list for the rest of this workfl
 <write_canonical_continuation>
 Every closure ends with **zero or one** handoff. Pick the path once and execute it.
 
-**Path A — `--no-session` (zero handoffs, a.k.a. `/release`)**: skip to `<archive_scope>`. After archiving, confirm: "Session released. All approved items persisted and committed. No continuation handoff. Archived scope: <list>."
+**Path A — `--no-session` (zero handoffs, a.k.a. `/release`)**: skip to `<archive_scope>`. All in-scope sessions are archived; no handoff file is created. After archiving, confirm: "Closed without continuation. All approved items persisted and committed. Archived scope: <list>." Do NOT describe this as "released to todo" — it is an archive-and-close, not a return-to-queue.
 
 **Path B — rewrite in place (one handoff, artifact exists)**: a mid-session artifact is still in TODO.
 

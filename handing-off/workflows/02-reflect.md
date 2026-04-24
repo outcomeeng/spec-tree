@@ -41,10 +41,10 @@ What is broken, missing, or wrong?
 For each issue:
 
 1. **Can you fix it right now?** Stale references, broken links, wrong paths, simple corrections — fix them immediately using Edit/Grep. Do not propose them in workflow 03. Do not ask the user. Just fix them and note what you fixed.
-2. **Is the fix too large for this session?** Write or update ISSUES.md in the node directory.
-3. **Is a spec assertion wrong?** Fix the spec directly — this is a durable fix.
+2. **Is the fix too large for this session?** **Propose** writing or updating ISSUES.md in the node directory. Do NOT write it here — ISSUES.md is a Tier 3 escape hatch that requires `AskUserQuestion` approval in workflow 03. Workflow 04 writes it after approval.
+3. **Is a spec assertion wrong?** Fix the spec directly — spec files are Tier 1 durable changes governed by the audit gate.
 
-**Critical**: Read any existing ISSUES.md for each anchored node. Check every item — are items listed as open now fixed? Are there new issues not yet listed? A stale ISSUES.md will mislead the next agent.
+**Critical**: Read any existing ISSUES.md for each anchored node. Check every item — are items listed as open now fixed? Are there new issues not yet listed? A stale ISSUES.md will mislead the next agent. If ISSUES.md needs to be updated or removed, **propose** that in workflow 03 — do not edit the file here.
 
 </perspective_issues>
 
@@ -55,14 +55,14 @@ What do you now understand about how the remaining work should proceed?
 - **Remaining steps** — what concrete steps remain, in what order
 - **Dependencies** — what must happen before what
 
-For each insight, determine persistence target:
+For each insight, **propose** the persistence target (workflow 03 asks the user; workflow 04 writes on approval):
 
-- Amend a spec (if the insight changes what the spec says)
-- Write or update PLAN.md in the node directory (if it's a concrete plan for remaining work)
-- Remove PLAN.md (if all planned steps are now complete — a done plan is a stale plan)
+- Amend a spec (if the insight changes what the spec says) — Tier 1, proposed in workflow 03 and written in workflow 04
+- Write or update PLAN.md in the node directory (if it's a concrete plan for remaining work) — Tier 3 escape hatch, requires `AskUserQuestion` approval
+- Remove PLAN.md (if all planned steps are now complete — a done plan is a stale plan) — also Tier 3, also requires approval
 - Session file only (if it's coordination context)
 
-**Critical**: Read any existing PLAN.md for each anchored node. Are steps listed as remaining now complete? Is the plan still the right approach? Update or remove — never leave a stale plan.
+**Critical**: Read any existing PLAN.md for each anchored node. Are steps listed as remaining now complete? Is the plan still the right approach? If the plan needs updating or removing, **propose** that in workflow 03 — do not edit the file here. Never leave a stale plan, but never write one without approval either.
 
 </perspective_path_forward>
 
@@ -87,29 +87,9 @@ Where exactly should the next agent begin?
 <perspective_session_scope>
 Which sessions are in this conversation's scope, and is there a mid-session handoff artifact to reconcile?
 
-**Resolve the in-scope set** (same algorithm workflow 04 uses — keep them in sync):
+**Run the canonical scope-resolution algorithm.** Read `references/scope-resolution.md` and follow every step. The algorithm covers: reading `<SESSION_SCOPE>`, the fallback recovery ladder (checkpoint scope attribute → additive rebuild), the scope-growth rule, mid-session artifact location, and the four-way classification. Do not reproduce the steps here — the reference is the single source of truth.
 
-1. Read the most recent `<SESSION_SCOPE ids="a,b,c">` marker. Each id is a user-confirmed pickup and must be reconciled at closure.
-2. **Fallback when no scope marker exists**: context compaction or a malformed marker can drop `<SESSION_SCOPE>`. Rebuild additively:
-   - Collect every `<PICKUP_CLAIM id="...">` and `<PICKUP_CHECKPOINT id="...">` emitted since the last closure marker in the conversation.
-   - Deduplicate by id; the resulting set is the resolved scope.
-   - If the set has **one** id, proceed.
-   - If the set has **more than one** id, STOP and ask the user to confirm the full scope before continuing workflow 02. NEVER silently collapse to the most recent pickup — that is the exact failure mode the additive rule exists to prevent.
-   - If the set is **empty**, check for pickup evidence: `spx session list --status doing` showing sessions this worktree may own, or stale references in the conversation to a claimed session. If any such evidence exists, STOP and ask the user to confirm scope. Only declare scope empty when there is clear evidence no pickup happened in this conversation.
-3. Scope grows ONLY by user confirmation. Do NOT auto-scan the todo queue to add sessions. Another agent may own work that looks related but is not yours to close.
-
-**Fold every still-relevant fact from the in-scope sessions into durable targets first** (spec tree, skills, CLAUDE.md, memory), then into the canonical continuation's coordination section only when no higher tier fits.
-
-**Locate any mid-session handoff artifact:**
-
-Did this conversation run `spx session handoff` earlier and produce a session file that is still in TODO? That file is a **workflow artifact**, not a scope member. List it separately — workflow 04 will reconcile it so the end state has zero or one handoff.
-
-**Classification for each session observed:**
-
-- **in-scope** — named in `<SESSION_SCOPE>`. Will be archived after the canonical continuation is verified.
-- **mid-session artifact** — created by this conversation's earlier `spx session handoff` and still in TODO. Workflow 04 will either rewrite it in place as the canonical continuation or archive it.
-- **unrelated** — belongs to another agent or another conversation. Leave untouched.
-- **ambiguous** — STOP and ask the user before creating a handoff.
+**Use the resolved scope to drive reflection.** For each session in the resolved scope, fold every still-relevant fact into durable targets first (spec tree, skills, CLAUDE.md, memory), then into the canonical continuation's coordination section only when no higher tier fits. Mid-session artifacts are not reflected into — workflow 04 reconciles them by rewrite-in-place or archival.
 
 The existence of a mid-session artifact is never, by itself, permission to archive an in-scope session. Permission flows from completing this workflow. A handoff replaces incorporated context; it never supplements it.
 
