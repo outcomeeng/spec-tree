@@ -1,8 +1,6 @@
 ---
 name: contextualizing
-description: >-
-  ALWAYS invoke this skill when asking about status, progress, or what exists in the spec tree.
-  NEVER work on any part of the spec tree without loading context through this skill first.
+description: ALWAYS invoke this skill when asking about status, progress, or what exists in the spec tree. NEVER work on any part of the spec tree without loading context through this skill first.
 allowed-tools: Read, Glob, Grep
 ---
 
@@ -23,8 +21,8 @@ This is full injection — every collected document is read into the conversatio
 - Read order: product root → ancestors → target (top-down)
 - All ADRs and PDRs at all levels must be read — no skipping based on title relevance
 - Lower-index siblings' specs must be read at each directory level — they constrain the target
-- Test files are excluded — context is about specs and decisions, not evidence
-- **Always use full path** from `spx/` to target — indices are sibling-unique, not globally unique:
+- Test files are not read by `/contextualizing`. The target spec already exposes inline `[test](tests/...)` links; list those links and the `tests/` directory state, then leave test-body inspection to `/testing`, `/auditing-tests`, or `/applying`.
+- **Always use full paths** from `spx/` for targets and references. Never refer to nodes, ADRs, or PDRs by bare name or numeric prefix; sibling numbers repeat under different parents and decision files cannot be found without their parent path.
   - Wrong: `/contextualizing 32-parser.outcome`
   - Right: `/contextualizing 21-infra.enabler/32-parser.outcome`
 
@@ -128,7 +126,7 @@ Glob: "spx/{path-to-dir}/ISSUES.md"
 
 **2d. Read all lower-index siblings' specs**
 
-The target node has an index (e.g., `43` in `43-feature.outcome`). All sibling nodes with a lower index constrain the target and must be read.
+The target node has an index (e.g., `43` in `43-feature.outcome`). Existing lower-index sibling specs constrain the target's context and must be read.
 
 ```bash
 # List all sibling directories (same parent, different from target)
@@ -138,7 +136,7 @@ Glob: "spx/{parent-path}/*-*.{enabler,outcome}/"
 Read: spx/{parent-path}/{sibling-dir}/{sibling-slug}.md
 ```
 
-Lower-index siblings' ADRs/PDRs are NOT read — only the sibling's spec itself. The dependency encoding means the sibling's existence constrains the target, but the sibling's internal decisions are its own concern.
+Lower-index siblings' ADRs/PDRs are NOT read — only the sibling's spec itself. Existing numeric order makes the sibling's spec part of the target context, while the sibling's internal decisions are its own concern.
 
 **2e. Note same-index siblings (independent)**
 
@@ -169,7 +167,9 @@ Glob: "spx/{target-path}/PLAN.md"
 Glob: "spx/{target-path}/ISSUES.md"
 ```
 
-**If PLAN.md or ISSUES.md exist, read them.** These are non-durable escape hatches left by previous agents via `/handoff`. They contain deferred plans or known issues that the next agent must be aware of.
+**If PLAN.md or ISSUES.md exist, read them.** These are non-durable escape hatches left by previous sessions via `/handoff`. They contain deferred plans or known issues that subsequent work must account for.
+
+**Do not read test file bodies.** Record the test links visible in the target spec and whether co-located test files exist. Context loading does not infer implementation state from test imports. When the next workflow needs test details, route to `/testing`, `/auditing-tests`, or `/applying`.
 
 </step>
 
@@ -199,12 +199,14 @@ Hierarchy:
           └── {target} ({enabler|outcome}) ← TARGET
 
 Children: {count} ({list if any})
-Tests: {exists|missing}
+Test links: {list from target spec, full paths resolved from target} | none
+Co-located tests: {count} listed | none
+Implementation: unknown unless already established by a prior workflow
 Escape hatches: {list of {path}/PLAN.md and {path}/ISSUES.md found at any level} | none
 Local skill overlays: {comma-separated list from spx/local/} | none
 Lower-index siblings read: {list}
 Same-index siblings (independent): {list}
-Higher-index siblings (depend on target): {list}
+Higher-index siblings listed: {list}
 
 </SPEC_TREE_CONTEXT>
 ```
@@ -235,15 +237,23 @@ Do NOT proceed with partial context. The whole point of deterministic context is
 
 **Failure 1: Skipped ADRs/PDRs based on title relevance**
 
-Agent globbed 12 decision records but only read 3 whose titles seemed relevant. The answer to the user's question was in one of the 9 skipped documents. The verification gate ("glob count must equal read count") prevents this.
+Claude globbed 12 decision records but only read 3 whose titles seemed relevant. The answer to the user's question was in one of the 9 skipped documents. The verification gate ("glob count must equal read count") prevents this.
 
 **Failure 2: Missed lower-index siblings**
 
-Agent walked the ancestor chain but didn't read lower-index siblings' specs. A lower-index enabler contained infrastructure the target depended on. The dependency encoding means lower-index = constraining, so they must be read.
+Claude walked the ancestor chain but didn't read lower-index siblings' specs. A lower-index enabler contained infrastructure the target depended on. Existing numeric order means lower-index sibling specs are constraining context, so they must be read.
 
 **Failure 3: Read higher-index siblings**
 
-Agent read ALL siblings including higher-index ones. Higher-index siblings may depend on the target but don't constrain it. Reading them wastes context window and may introduce irrelevant information.
+Claude read ALL siblings including higher-index ones. Higher-index siblings may depend on the target but don't constrain it. Reading them wastes context window and may introduce irrelevant information.
+
+**Failure 4: Inferred implementation state from tests during context loading**
+
+Claude read test file imports during `/contextualizing` and reported implementation state from those imports. That made context loading expensive and mixed it with testing work. Context loading lists test links and co-located test files only; `/testing`, `/auditing-tests`, and `/applying` inspect test bodies.
+
+**Failure 5: Reported a bare node or decision name**
+
+Claude wrote "see 15-build.adr.md" or "continue in 32-parser.enabler" without the full path. Those references are ambiguous because numeric prefixes are sibling-local. Always report `spx/.../15-build.adr.md` or `spx/.../32-parser.enabler` so the file can be found.
 
 </failure_modes>
 
@@ -259,9 +269,11 @@ Context loading is complete when:
 - [ ] Target spec read
 - [ ] Target ADRs/PDRs read
 - [ ] Children enumerated
-- [ ] Test directory status checked
+- [ ] Test links listed from the target spec and co-located test files listed without reading test bodies
+- [ ] Implementation state reported as unknown unless a prior workflow already established it
 - [ ] Escape hatches (PLAN.md, ISSUES.md) checked and read if present at each ancestor AND at target
 - [ ] Local skill overlays enumerated from `spx/local/` and listed in manifest
+- [ ] All node, ADR, PDR, test, and escape-hatch references in the manifest use full paths from `spx/`
 - [ ] `<SPEC_TREE_CONTEXT target="...">` marker emitted with full manifest
 - [ ] No ABORT conditions triggered (or appropriate error shown with remediation)
 
