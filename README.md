@@ -11,7 +11,7 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (16)
+## Skills (17)
 
 | Skill | Description |
 | ----- | ----------- |
@@ -26,6 +26,7 @@ npx skills add outcomeeng/spec-tree
 | `decomposing` | breaking down, splitting, scoping, composing, or structuring spec tree nodes |
 | `handing-off` | ALWAYS invoke when closing a spec-tree work session, writing a handoff, or preparing continuation context |
 | `interviewing` | ALWAYS invoke BEFORE asking the user anything while creating or modifying any artifact (spec, ADR, PDR, test, code, doc) |
+| `opening-pr` | opening a pull request, creating a PR, or pushing a branch for review |
 | `picking-up` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another agent's saved context |
 | `refactoring` | moving nodes, re-scoping content, or extracting shared enablers |
 | `refocusing` | running ad hoc commands, writing debug scripts, or writing code without a spec |
