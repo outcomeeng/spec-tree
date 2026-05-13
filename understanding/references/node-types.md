@@ -107,10 +107,13 @@ NN-slug.{enabler|outcome}/
 **Test files (`[test]` lane):**
 
 - Co-located in `tests/` within the node directory
-- Must indicate test level (unit, integration, e2e) in the filename
+- Must encode evidence type and execution level in the filename — one evidence type per file
+  - evidence ∈ {scenario, mapping, conformance, property, compliance}
+  - level ∈ {l1, l2, l3}
 - Naming follows the product's language convention, e.g.:
-  - TypeScript: `slug.unit.test.ts`, `slug.integration.test.ts`
-  - Python: `test_slug.unit.py`, `test_slug.integration.py`
+  - TypeScript: `slug.scenario.l1.test.ts`, `slug.property.l1.test.ts`, `slug.conformance.l2.test.ts`
+  - Python: `test_slug.scenario.l1.py`, `test_slug.property.l1.py`, `test_slug.conformance.l2.py`
+- An optional runner token sits between level and the test extension when a non-default runner applies (e.g., `slug.scenario.l2.playwright.test.ts`)
 - Verified by `[test]` evidence
 
 **Eval directories (`[eval]` lane):**
