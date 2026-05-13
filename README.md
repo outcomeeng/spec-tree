@@ -26,7 +26,7 @@ npx skills add outcomeeng/spec-tree
 | `contextualizing` | asking about status, progress, or what exists in the spec tree |
 | `decomposing` | breaking down, splitting, scoping, composing, or structuring spec tree nodes |
 | `github-actions` | the user asks about CI failures, workflow logs, GitHub Actions status, pipeline issues, or troubleshooting failed builds |
-| `handing-off` | ALWAYS invoke when closing a spec-tree work session, writing a handoff, or preparing continuation context |
+| `handing-off` | ALWAYS invoke when closing an in-scope spec-tree session, deciding whether to create a handoff, writing a handoff, or preparing continuation context |
 | `interviewing` | ALWAYS invoke BEFORE asking the user anything while creating or modifying any artifact (spec, ADR, PDR, test, code, doc) |
 | `opening-pr` | opening a pull request, creating a PR, or pushing a branch for review |
 | `picking-up` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another agent's saved context |
