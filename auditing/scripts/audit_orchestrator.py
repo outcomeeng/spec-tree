@@ -1242,6 +1242,168 @@ def _cmd_state_transition(args: argparse.Namespace) -> int:
     return 0
 
 
+def _collect_open_findings(verdict_dict: dict[str, object]) -> list[dict[str, object]]:
+    """Walk a verdict's rows and children recursively and return every open finding.
+
+    Open findings are those carried in row arrays of the wrapper and any
+    child verdict. The verdict-level ``resolved`` and ``reopened`` arrays
+    on a prior verdict are NOT open findings — they are state markers
+    used by the diff caller, not currently-failing concerns.
+
+    Identity-collision note: callers that index the result by
+    ``_finding_identity`` (file, line, rule, message) into a dict will
+    silently keep only the last finding of any colliding tuple. Distinct
+    findings sharing the same identity tuple in one verdict indicates a
+    producer bug, not a consumer concern.
+    """
+    collected: list[dict[str, object]] = []
+    for row in verdict_dict.get("rows", []) or []:
+        if isinstance(row, dict):
+            for finding in row.get("findings", []) or []:
+                if isinstance(finding, dict):
+                    collected.append(finding)
+    for child in verdict_dict.get("children", []) or []:
+        if isinstance(child, dict):
+            collected.extend(_collect_open_findings(child))
+    return collected
+
+
+def _finding_identity(
+    finding: dict[str, object],
+) -> tuple[str, int | None, str, str]:
+    """Return the content-identity tuple for a finding.
+
+    Identity is ``(file, line, rule, message)`` — the producer-stable
+    description of *what* the finding flags. ``id`` and ``severity`` are
+    deliberately excluded: ``id`` is producer-assigned and varies across
+    runs; ``severity`` may legitimately upgrade or downgrade across runs
+    without being a different finding. Two findings with the same
+    identity tuple are the same concern across runs.
+    """
+    raw_line = finding.get("line")
+    line = (
+        raw_line
+        if isinstance(raw_line, int) and not isinstance(raw_line, bool)
+        else None
+    )
+    return (
+        str(finding.get("file", "")),
+        line,
+        str(finding.get("rule", "")),
+        str(finding.get("message", "")),
+    )
+
+
+def compute_verdict_diff(
+    *,
+    prior: dict[str, object] | None,
+    current: dict[str, object],
+) -> dict[str, object]:
+    """Return the current verdict enriched with ``resolved`` and ``reopened``.
+
+    The diff carries forward state across runs by content-identity:
+
+    - ``resolved`` = (prior.resolved ∪ {findings present in prior.open
+      and absent from current.open}) − {findings present in current.open}.
+      The set grows monotonically across runs except for findings that
+      are reopened.
+    - ``reopened`` = current.open ∩ prior.resolved. A finding that was
+      previously resolved and is now open again surfaces in this set.
+
+    When ``prior`` is ``None`` (first run on a new PR), both arrays are
+    empty and the current verdict is returned with empty ``resolved`` and
+    ``reopened`` lists.
+
+    The function does not mutate ``current``; it returns a new dict that
+    is the same shape as ``current`` with the two arrays populated.
+    """
+    enriched = dict(current)
+    enriched["resolved"] = []
+    enriched["reopened"] = []
+    if prior is None:
+        return enriched
+    prior_open = _collect_open_findings(prior)
+    current_open = _collect_open_findings(current)
+    prior_resolved_raw = prior.get("resolved", []) or []
+    prior_resolved: list[dict[str, object]] = [
+        f for f in prior_resolved_raw if isinstance(f, dict)
+    ]
+    prior_open_by_identity = {_finding_identity(f): f for f in prior_open}
+    current_open_by_identity = {_finding_identity(f): f for f in current_open}
+    prior_resolved_by_identity = {_finding_identity(f): f for f in prior_resolved}
+    newly_resolved_keys = sorted(
+        set(prior_open_by_identity) - set(current_open_by_identity),
+        key=_identity_sort_key,
+    )
+    newly_resolved = [prior_open_by_identity[k] for k in newly_resolved_keys]
+    carried_resolved_keys = sorted(
+        set(prior_resolved_by_identity) - set(current_open_by_identity),
+        key=_identity_sort_key,
+    )
+    carried_resolved = [prior_resolved_by_identity[k] for k in carried_resolved_keys]
+    enriched["resolved"] = carried_resolved + newly_resolved
+    reopened_keys = sorted(
+        set(current_open_by_identity) & set(prior_resolved_by_identity),
+        key=_identity_sort_key,
+    )
+    enriched["reopened"] = [current_open_by_identity[k] for k in reopened_keys]
+    return enriched
+
+
+def _identity_sort_key(
+    identity: tuple[str, int | None, str, str],
+) -> tuple[str, int, int, str, str]:
+    """Return a None-safe sort key for finding identity tuples.
+
+    Python 3 cannot compare ``None`` to ``int`` directly, so the line
+    component is split into a presence bit (0 for None, 1 for int) and a
+    numeric value (0 when None). Findings with no line sort before
+    findings with a line within the same file, then by numeric line.
+    """
+    file_, line, rule, message = identity
+    has_line = 0 if line is None else 1
+    line_value = 0 if line is None else line
+    return (file_, has_line, line_value, rule, message)
+
+
+def _cmd_verdict_diff(args: argparse.Namespace) -> int:
+    """CLI: enrich a current verdict with resolved/reopened computed from a prior.
+
+    Reads the current verdict on stdin (JSON), reads the optional prior
+    verdict from ``--prior`` (a path; absent means first-run), writes
+    the enriched verdict JSON to stdout. Exit codes: 0 on success,
+    1 on JSON parse failure, 2 on missing required structure.
+    """
+    try:
+        current = json.loads(sys.stdin.read())
+    except json.JSONDecodeError as exc:
+        sys.stderr.write(f"verdict-diff: invalid current JSON on stdin: {exc}\n")
+        return 1
+    if not isinstance(current, dict):
+        sys.stderr.write("verdict-diff: current verdict must be a JSON object\n")
+        return 2
+    prior: dict[str, object] | None = None
+    if args.prior is not None:
+        try:
+            prior_text = args.prior.read_text(encoding="utf-8")
+        except OSError as exc:
+            sys.stderr.write(f"verdict-diff: cannot read prior verdict: {exc}\n")
+            return 1
+        try:
+            prior_loaded = json.loads(prior_text)
+        except json.JSONDecodeError as exc:
+            sys.stderr.write(f"verdict-diff: invalid prior JSON: {exc}\n")
+            return 1
+        if not isinstance(prior_loaded, dict):
+            sys.stderr.write("verdict-diff: prior verdict must be a JSON object\n")
+            return 2
+        prior = prior_loaded
+    enriched = compute_verdict_diff(prior=prior, current=current)
+    json.dump(enriched, sys.stdout)
+    sys.stdout.write("\n")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     """Return the argparse parser exposing every CLI subcommand."""
     parser = argparse.ArgumentParser(
@@ -1341,6 +1503,22 @@ def build_parser() -> argparse.ArgumentParser:
     state_transition_cmd.add_argument("--now", required=True)
     state_transition_cmd.add_argument("--verdict", required=True)
     state_transition_cmd.set_defaults(func=_cmd_state_transition)
+
+    verdict_diff_cmd = subparsers.add_parser(
+        "verdict-diff",
+        help=(
+            "Read a current verdict on stdin and an optional prior verdict "
+            "from --prior; print the current verdict enriched with "
+            "resolved/reopened arrays computed by content identity."
+        ),
+    )
+    verdict_diff_cmd.add_argument(
+        "--prior",
+        type=pathlib.Path,
+        default=None,
+        help="Path to prior verdict JSON. Omit for first-run (no prior).",
+    )
+    verdict_diff_cmd.set_defaults(func=_cmd_verdict_diff)
 
     return parser
 
