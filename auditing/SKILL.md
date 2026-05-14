@@ -15,9 +15,9 @@ This skill references its bundled scripts as `${CLAUDE_SKILL_DIR}/scripts/<name>
 
 Run a deterministic audit over a code scope: prepare (Phase 0), automated gates (Phase 1), tests (Phase 2), implementation review (Phase 3), test evidence (Phase 4), ADR/PDR compliance (Phase 5), and emit (Phase 6). Partition the scope by language, dispatch to the corresponding `auditing-{lang}*` skills, aggregate each partition's verdict via `aggregate_verdicts.py`, and emit one wrapper verdict whose `children` array carries the per-language dispatched verdicts. The orchestrator itself embeds zero language-specific knowledge beyond the dispatch template — language audits live in their own skills, this one composes them.
 
-This skill runs a single, stateless audit pass. It reads no prior verdict and persists nothing to the project tree; the caller renders and delivers the emitted verdict (a CI workflow posts the `markdown+json` carrier to the PR comment thread; a local agent relays the rendered output).
+This skill runs a single audit pass per invocation. By default it is stateless: it reads no prior verdict and persists nothing — the caller renders and delivers the emitted verdict (a CI workflow posts the `markdown+json` carrier to the PR comment thread; a local agent relays the rendered output). When a caller (e.g., the `audit-orchestrator` agent) needs cross-commit continuity, the skill exposes a stateful orchestration mode that drives the `audit_orchestrator.py` CLI to maintain `.spx/audits/<lang>/<branch-slug>.md` and a TTL-bounded lock at `<state-file>.lock`. See `<stateful_orchestration>` below.
 
-Read-only. Produces verdicts, not code changes.
+Read-only over the audited code. The stateful mode writes only under the gitignored `.spx/audits/` partition; the audited project tree is never modified.
 
 </objective>
 
@@ -198,6 +198,75 @@ Overall rollup follows `verdict.roll_up`: APPROVED iff every wrapper row and eve
 **Re-implemented rollup.** Claude computes the wrapper's overall by reading the children's rows and deciding APPROVED/REJECTED in-prose. The rollup lives in `verdict.roll_up`; `aggregate_verdicts.py` invokes it. Never re-implement the rollup logic inline.
 
 </failure_modes>
+
+<stateful_orchestration>
+
+Callers that need cross-run continuity — carrying open finding IDs forward, resolving findings that have been fixed, reopening regressions under their original IDs — invoke this skill with the stateful-orchestration mode enabled. The mode is opt-in: a caller activates it by requesting state persistence (e.g., the `audit-orchestrator` agent in its prompt). When inactive, the skill runs the stateless protocol above unchanged.
+
+State partitioning and naming are deterministic. State files live at `.spx/audits/<lang>/<branch-slug>.md` rooted in the repo working tree, with the run lock at `<state-file>.lock`. The `.spx/` root is gitignored — state is local development scratch, not product truth. Language partition is the same `<lang>` the orchestrator dispatches against in Phase 3–5; branch slug is derived from the current branch via the CLI.
+
+The skill drives every CLI invocation from inside its own prose so the calling agent never constructs a path into `scripts/`. Each command below is invoked exactly once per language partition as part of the stateful flow. Every shell variable below is set within these blocks — there are no upward references to undefined names — so an agent that runs each block in order has every value in scope.
+
+1. **Resolve the branch and the state path.** `LANG` is the partition language identifier from Phase 0 step 3 (`python`, `typescript`, `rust`, …). The block assumes `LANG` is set in the agent's environment — one invocation per partition with `LANG` set accordingly.
+
+   ```bash
+   BRANCH=$(python3 "${CLAUDE_SKILL_DIR}/scripts/audit_orchestrator.py" current-branch)
+   BASE=$(python3 "${CLAUDE_SKILL_DIR}/scripts/audit_orchestrator.py" base-ref)
+   STATE_DIR=".spx/audits/${LANG}"
+   SLUG=$(python3 "${CLAUDE_SKILL_DIR}/scripts/audit_orchestrator.py" \
+     branch-slug --branch "$BRANCH" --state-dir "$STATE_DIR")
+   STATE_FILE="$STATE_DIR/${SLUG}.md"
+   LOCK_FILE="${STATE_FILE}.lock"
+   ```
+
+2. **Acquire the lock before any state read or write.** A fresh held lock means another run is in progress on this branch — halt the audit and report the lock holder so the caller can decide whether to wait or abort.
+
+   ```bash
+   python3 "${CLAUDE_SKILL_DIR}/scripts/audit_orchestrator.py" acquire-lock \
+     --path "$LOCK_FILE" || exit 1
+   ```
+
+   Crash recovery is the TTL's responsibility, not a shell `trap`. The agent invokes the stateful flow as a sequence of separate `Bash` tool calls, each spawning a fresh shell; a `trap EXIT` registered in the acquisition call does not survive into later calls. If the agent or session aborts between this step and step 5's explicit release, the lock file persists until its mtime exceeds `DEFAULT_LOCK_TTL_SECONDS` (600 s), after which the next acquire-lock invocation overwrites it. The clean-exit release lives in step 5 below.
+
+3. **Run the audit (stateless Phases 0–6).** Phase 6 writes per-language verdict JSON files into the scratch directory `$CHILDREN_DIR` defined inside the Phase 6 `<phase number="6">` block above. Read this partition's verdict back into a shell variable with `read_verdict.py`:
+
+   ```bash
+   FINDINGS_JSON=$(python3 "${CLAUDE_SKILL_DIR}/scripts/read_verdict.py" \
+     --file "$CHILDREN_DIR/${LANG}.json" --field findings)
+   ```
+
+4. **Apply the state transition.** Pipe `FINDINGS_JSON` into `state-transition`. The CLI writes the new state file atomically and emits the `{open, resolved, reopened}` classification on stdout. `VERDICT` is the wrapper verdict's `overall` from Phase 6 (`APPROVED`, `REJECTED`, or `UNKNOWN`).
+
+   ```bash
+   CURRENT_SHA=$(git rev-parse HEAD)
+   NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+   printf '%s' "$FINDINGS_JSON" | \
+     python3 "${CLAUDE_SKILL_DIR}/scripts/audit_orchestrator.py" state-transition \
+       --state-file "$STATE_FILE" \
+       --branch "$BRANCH" \
+       --current-sha "$CURRENT_SHA" \
+       --now "$NOW" \
+       --verdict "$VERDICT"
+   ```
+
+   The stdin payload conforms to the `state-transition` contract: a JSON object with a top-level `findings` array, each entry carrying `file_line`, `concern`, `root_cause`, and `required_fix` strings. Construct `FINDINGS_JSON` as that shape (the Phase 6 dispatched-skill verdicts already populate the four fields per finding).
+
+5. **Release the lock and render the emitted output.** Run `release-lock` as the final step of the clean-exit path; the call is idempotent so re-running is safe.
+
+   ```bash
+   python3 "${CLAUDE_SKILL_DIR}/scripts/audit_orchestrator.py" release-lock \
+     --path "$LOCK_FILE"
+   ```
+
+   Then render with the state classification merged into the wrapper verdict's metadata (`state.open_count`, `state.resolved_this_run`, `state.reopened_this_run`). The verdict surface form follows the caller's format flag; the orchestration mode does not change which format is rendered.
+
+The lock TTL defaults to `DEFAULT_LOCK_TTL_SECONDS` (600 seconds). A lock with mtime older than the TTL is treated as stale (left by a crashed run) and overwritten; this is the crash-recovery path. The explicit `release-lock` above is the clean-exit path.
+
+The state-transition CLI distinguishes three failure modes by exit code: `1` for lock-held / acquisition failure, `2` for `StateFileCorruptError` (the on-disk state file failed to parse), `3` for malformed stdin JSON (missing required finding keys). Exit `2` is the agent's signal to surface the state-file path and ask the caller whether to discard it for a clean re-run or keep it for inspection.
+
+The stateful mode never writes outside `.spx/audits/`. The wrapper verdict, dispatched children, and `$CHILDREN_DIR` scratch space remain ephemeral per the stateless contract.
+
+</stateful_orchestration>
 
 <success_criteria>
 
