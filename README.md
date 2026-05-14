@@ -11,7 +11,7 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (19)
+## Skills (20)
 
 | Skill | Description |
 | ----- | ----------- |
@@ -32,6 +32,7 @@ npx skills add outcomeeng/spec-tree
 | `picking-up` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another agent's saved context |
 | `refactoring` | moving nodes, re-scoping content, or extracting shared enablers |
 | `refocusing` | running ad hoc commands, writing debug scripts, or writing code without a spec |
+| `reviewing-pr` | reviewing a pull request — produces constructive review feedback on code quality, bugs, performance, security, and test coverage, grounded in the repository's own conventions |
 | `testing` | ALWAYS invoke this skill before writing tests or when learning the testing approach |
 | `understanding` | ALWAYS invoke this skill before any spec-tree work to load methodology |
 
