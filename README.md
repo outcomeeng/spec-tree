@@ -17,9 +17,9 @@ npx skills add outcomeeng/spec-tree
 | ----- | ----------- |
 | `aligning` | reviewing, auditing, or checking spec file conformance |
 | `applying` | ALWAYS invoke this skill before implementing any spec-tree work item |
-| `auditing` | running an audit pass over a code scope. Produces one structured wrapper verdict whose children carry per-language dispatched verdicts, by dispatching to language-specific auditing-{lang}* skills |
-| `auditing-product-decisions` | auditing PDRs or after writing a PDR |
-| `auditing-tests` | auditing test evidence quality, after writing tests for a spec node, or before closing an outcome |
+| `auditing` | Use when asked by the user to invoke the audit skill |
+| `auditing-product-decisions` | Use when asked by the user to invoke the PDR audit skill |
+| `auditing-tests` | Use when asked by the user to invoke the test evidence audit skill |
 | `authoring` | adding, defining, or creating specs, decisions, or nodes |
 | `bootstrapping` | setting up a new spec tree or when /authoring detects an empty spx/ directory |
 | `committing-changes` | committing changes or when user says "commit" |
@@ -32,7 +32,7 @@ npx skills add outcomeeng/spec-tree
 | `picking-up` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another agent's saved context |
 | `refactoring` | moving nodes, re-scoping content, or extracting shared enablers |
 | `refocusing` | running ad hoc commands, writing debug scripts, or writing code without a spec |
-| `reviewing-pr` | reviewing a pull request — produces constructive review feedback on code quality, bugs, performance, security, and test coverage, grounded in the repository's own conventions |
+| `reviewing-pr` | Use when asked by the user to invoke the PR review skill |
 | `testing` | ALWAYS invoke this skill before writing tests or when learning the testing approach |
 | `understanding` | ALWAYS invoke this skill before any spec-tree work to load methodology |
 
