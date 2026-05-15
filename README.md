@@ -34,7 +34,7 @@ npx skills add outcomeeng/spec-tree
 | `refactoring` | moving nodes, re-scoping content, or extracting shared enablers |
 | `refocusing` | running ad hoc commands, writing debug scripts, or writing code without a spec |
 | `reviewing-pr` | Use when asked by the user to invoke the PR review skill |
-| `standardizing-merging` | Cross-cutting standards for the merge flow — branch hygiene, branch topology, push semantics, draft/ready lifecycle, heartbeat protocol, and three-surface review inspection |
+| `standardizing-merging` | Cross-cutting standards for the merge flow — branch hygiene, branch topology, push semantics, draft/ready lifecycle, heartbeat protocol, three-surface review inspection, and the four-class review-finding taxonomy used by both authors and reviewers |
 | `testing` | ALWAYS invoke this skill before writing tests or when learning the testing approach |
 | `understanding` | ALWAYS invoke this skill before any spec-tree work to load methodology |
 
