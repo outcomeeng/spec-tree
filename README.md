@@ -11,7 +11,7 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (22)
+## Skills (24)
 
 | Skill | Description |
 | ----- | ----------- |
@@ -33,9 +33,11 @@ npx skills add outcomeeng/spec-tree
 | `picking-up` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another agent's saved context |
 | `refactoring` | moving nodes, re-scoping content, or extracting shared enablers |
 | `refocusing` | running ad hoc commands, writing debug scripts, or writing code without a spec |
+| `reviewing-changes` | the wrapper agent reviews the working changes on a branch against the PR's base ref |
 | `reviewing-pr` | Use when asked by the user to invoke the PR review skill |
 | `standardizing-merging` | Cross-cutting standards for the merge flow — branch hygiene, branch topology, push semantics, draft/ready lifecycle, heartbeat protocol, three-surface review inspection, and the four-class review-finding taxonomy used by both authors and reviewers |
 | `testing` | ALWAYS invoke this skill before writing tests or when learning the testing approach |
+| `thread-store` | persisting or retrieving branch-scoped vetting records |
 | `understanding` | ALWAYS invoke this skill before any spec-tree work to load methodology |
 
 ## License
