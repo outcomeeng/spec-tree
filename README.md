@@ -33,7 +33,7 @@ npx skills add outcomeeng/spec-tree
 | `picking-up` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another agent's saved context |
 | `refactoring` | moving nodes, re-scoping content, or extracting shared enablers |
 | `refocusing` | running ad hoc commands, writing debug scripts, or writing code without a spec |
-| `reviewing-changes` | the wrapper agent reviews the working changes on a branch against the PR's base ref |
+| `reviewing-changes` | the wrapper agent reviews the working changes on a branch against a base ref |
 | `reviewing-pr` | Use when asked by the user to invoke the PR review skill |
 | `standardizing-merging` | Shared vocabulary for the PR flow — pre-flight predicates, branch topology gate, push command, PR authority gate, four-class review classification, three review surfaces, action tokens, and repo-local overlay topics |
 | `testing` | ALWAYS invoke this skill before writing tests or when learning the testing approach |
