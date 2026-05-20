@@ -35,7 +35,7 @@ npx skills add outcomeeng/spec-tree
 | `refocusing` | running ad hoc commands, writing debug scripts, or writing code without a spec |
 | `reviewing-changes` | the wrapper agent reviews the working changes on a branch against a base ref |
 | `reviewing-pr` | Use when asked by the user to invoke the PR review skill |
-| `standardizing-merging` | Shared vocabulary for the PR flow — pre-flight predicates, branch topology gate, push command, PR authority gate, four-class review classification, three review surfaces, action tokens, and repo-local overlay topics |
+| `standardizing-merging` | Shared vocabulary for the PR flow — pre-flight predicates, branch topology gate, push command, PR authority gate, three-severity review classification, three review surfaces, action tokens, and repo-local overlay topics |
 | `testing` | ALWAYS invoke this skill before writing tests or when learning the testing approach |
 | `thread-store` | persisting or retrieving branch-scoped vetting records |
 | `understanding` | ALWAYS invoke this skill before any spec-tree work to load methodology |

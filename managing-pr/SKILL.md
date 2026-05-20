@@ -24,15 +24,27 @@ gh pr view --json number,url,headRefName,baseRefName,state,isDraft,mergeStateSta
 
 **Step 2 — Inspect three surfaces.** Run /standardizing-merging `<review_inspection>` queries. Compare timestamps against the most recent push; entries after that push are re-reviews of the latest state.
 
-**Step 3 — Classify every finding.** Apply the four-class taxonomy from /standardizing-merging `<review_classification>`. Convert any severity-rank labels (`P0`, `critical`, `nit`) on incoming feedback to one of the four classes before queuing.
+**Step 3 — Classify every finding.** Apply the three-severity / six-category taxonomy from /standardizing-merging `<review_classification>`. Convert any severity-rank labels (`P0`, `critical`, `nit`) or legacy class labels (`NEEDS-ANSWER`, `NOTE`) on incoming feedback to one of the three severities before queuing — reframe open questions as findings and omit commentary that does not constitute a finding.
 
-**Step 4 — Drive the queue.** Address `BLOCKING` first. Answer or investigate `NEEDS-ANSWER` before coding speculative fixes. Record accepted `FOLLOW-UP` items in the owning node's `ISSUES.md` or `PLAN.md` (edit those files directly via the Edit or Write tool — they are committed coordination artifacts, not spec assertions). Drop `NOTE` items unless the reviewer requests acknowledgment.
+**Step 4 — Drive the queue.** Address `BLOCKING` first, then `DEBT` — both require fix-in-this-PR. Record accepted `FOLLOW-UP` items in the owning node's `ISSUES.md` or `PLAN.md` (edit those files directly via the Edit or Write tool — they are committed coordination artifacts, not spec assertions).
 
 **Step 5 — Push follow-ups deliberately.** Validate via the narrowest meaningful check after each fix. Before any push approaching ready or merge, run the project's local closure gate (named in `spx/local/merging.md` if defined). Commit via /committing-changes. Re-run /standardizing-merging `<branch_hygiene>` before every push — hygiene applies on every push, not only at creation. Push via /standardizing-merging `<push_semantics>`. For post-ready follow-ups, default to `gh pr ready --undo <pr-number>` before pushing per /standardizing-merging `<pr_authority_gate>` post-ready follow-up rule, unless `spx/local/merging.md` permits keeping the PR ready when the closure gate has just re-passed.
 
 **Step 6 — Refresh the heartbeat.** Per /standardizing-merging `<heartbeat>`, refresh the existing heartbeat. One heartbeat per PR.
 
 **Step 7 — Evaluate the PR authority gate and act.** Apply /standardizing-merging `<pr_authority_gate>` at the moment that fits the PR's current state.
+
+When evaluating the review predicate, locate the `spec-tree-review / spec-tree-review` check in Step 1's `statusCheckRollup` and read its conclusion. Confirm with `gh pr checks <pr-number>` for the human-readable status. If the check is missing from the rollup or its conclusion is ambiguous, fetch the underlying job with `gh run view <run-id> --json conclusion,jobs` (the run ID is in `detailsUrl`). If the conclusion is `skipped`, retrieve the skip cause from `gh api repos/<owner>/<repo>/actions/jobs/<job-id> --jq '.steps[]'` (or read the job's annotations) — GitHub Actions records "PR head differs from main" as the cause for the identical-workflow-content gate.
+
+If the conclusion is `skipped` **with cause "PR head differs from main"** and no current-head three-severity review has been posted, apply the reviewer-skipped-by-design exception from /standardizing-merging `<pr_authority_gate>`. For any other skip cause (path filter, branch filter, manual skip), emit `WAIT_FOR_REVIEW` and do not post the trigger-phrase comment — the exception is scoped to the self-modifying-PR case only.
+
+Reviewer-skipped-by-design exception steps:
+
+1. Resolve the trigger phrase from `spx/local/merging.md`'s **Mention-reviewer trigger phrase** topic (defaulting to `@claude` per /standardizing-merging `<repo_local_overlay>` when the overlay is silent).
+2. Post one PR-level comment with body exactly `<trigger-phrase> review` via `gh pr comment <pr-number>`.
+3. Emit `MENTION_REVIEW_NEEDED:<trigger-phrase>`, refresh the heartbeat, and exit Step 7. The mention-triggered reviewer's posted findings become the current-head three-severity review the next heartbeat reads.
+
+Otherwise, branch on PR state:
 
 - **PR is draft (`isDraft = true`):** evaluate the gate's promotion-time predicates. If every predicate holds, consult the overlay's draft-promotion-authority topic:
   - **Gate-green-autonomous (default):** run `gh pr ready <pr-number>`, refresh the heartbeat, and emit `WAIT_FOR_CHECKS` while ready-state CI fires.
@@ -70,16 +82,17 @@ gh pr checks <pr-number>
 
 # Post a PR-level comment (top of the conversation)
 gh pr comment <pr-number> --body-file - <<'EOF'
-BLOCKING [correctness]: path/to/file.py:42
+### BLOCKING [consistency]: path/to/file.py:42
+Reference: ...
 Evidence: ...
-Required before merge: ...
+Required: ...
 EOF
 
 # Post a formal review comment (counts as a review)
 gh pr review <pr-number> --comment --body-file - <<'EOF'
 Summary of remaining items:
 - 1 BLOCKING ...
-- 2 NEEDS-ANSWER ...
+- 2 DEBT ...
 EOF
 
 # Reply within an existing review thread (line-level comment)
@@ -106,12 +119,13 @@ The managing flow satisfies its contract when, at minimum:
 
 - /standardizing-merging and /committing-changes are loaded before any inspection or push.
 - Each pass inspects all three surfaces from /standardizing-merging `<review_inspection>`.
-- Every finding is labeled with one of `BLOCKING` / `NEEDS-ANSWER` / `FOLLOW-UP` / `NOTE` — never a severity rank.
-- The work queue is driven from `BLOCKING` and `NEEDS-ANSWER` only.
+- Every finding is labeled with one of `BLOCKING` / `DEBT` / `FOLLOW-UP` — never a severity rank, never a legacy four-class label.
+- The work queue is driven from `BLOCKING` and `DEBT` only — both require fix-in-this-PR.
 - Every follow-up push re-runs /standardizing-merging `<branch_hygiene>`.
 - Promotion fires autonomously under gate-green-autonomous draft-promotion authority; under overlay-requires-human, `MARK_READY` is emitted instead.
 - Merge fires autonomously under gate-green-autonomous merge authority; under overlay-requires-human, `AWAIT_MERGE_INSTRUCTION` is emitted instead.
 - Production-class PRs trigger `PRODUCTION_HOLD:<reason>` for both actions regardless of overlay.
+- A skipped auto-review job (`spec-tree-review / spec-tree-review: conclusion: skipped`) **with cause "PR head differs from main"** triggers the reviewer-skipped-by-design exception from /standardizing-merging `<pr_authority_gate>`: post `<trigger-phrase> review` as a PR-level comment and emit `MENTION_REVIEW_NEEDED:<trigger-phrase>`. For any other skip cause (path filter, branch filter, manual skip), emit `WAIT_FOR_REVIEW` — the exception is scoped to the self-modifying-PR case only.
 - Each pass that does not fire an autonomous action emits exactly one token from /standardizing-merging `<action_tokens>`.
 - No `<self_reference>` violation per /standardizing-merging.
 

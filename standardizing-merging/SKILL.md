@@ -2,7 +2,7 @@
 name: standardizing-merging
 user-invocable: false
 description: >-
-  Shared vocabulary for the PR flow — pre-flight predicates, branch topology gate, push command, PR authority gate, four-class review classification, three review surfaces, action tokens, and repo-local overlay topics.
+  Shared vocabulary for the PR flow — pre-flight predicates, branch topology gate, push command, PR authority gate, three-severity review classification, three review surfaces, action tokens, and repo-local overlay topics.
   Loaded by /opening-pr and /managing-pr.
 allowed-tools: Read
 ---
@@ -26,6 +26,7 @@ When loaded inside a repository, check for `spx/local/merging.md` at the reposit
 - **Production-class recognition** — the mechanism by which the project classifies a PR as production-class (label, branch prefix, file pattern, manifest declaration). Production-class PRs bypass gate-green-autonomous authority for both actions.
 - Keep-ready signal forms — project-specific rules for keeping a PR ready across follow-up pushes when the closure gate has just re-passed.
 - **Merge command** — which `gh pr merge` flags the project uses (rebase merge, merge commit, squash; whether `--delete-branch` runs inline or as a separate `git push origin --delete <branch>` to avoid multi-worktree cleanup failures).
+- **Mention-reviewer trigger phrase** — the leading phrase the agent posts as a PR-level comment to fire the mention-triggered reviewer when the auto-review job reports `conclusion: skipped` (see `<pr_authority_gate>` reviewer-skipped-by-design exception). The full comment body is `<trigger-phrase> review`; the `review` suffix is the keyword the mention reviewer matches on. Default: `@claude` (the upstream reviewer action's default `trigger_phrase`). Each consuming project that configures a non-default `trigger_phrase` in its reviewer caller workflow declares the matching phrase here.
 
 If `spx/local/merging.md` is absent or silent on a topic, the defaults in this reference apply. **Absence of a production-class recognition mechanism means the project has not opted in to production-class gating — every PR is treated as non-production-class.** The other gate predicates (clean current-head bot review, required checks terminal-green, branch hygiene, commit-age) still apply, so a non-blocking bot review on the current head remains a prerequisite for autonomous merge. Repos that need a production-class hold must declare the recognition mechanism in the overlay.
 
@@ -140,7 +141,7 @@ Both transitions are gated by the **PR authority gate**, evaluated at the moment
 
 - The project's local closure gate has been run against the latest pushed commit and passed. The author runs the local closure gate before each push that approaches ready or merge; CI runs validation on the resulting commit. The closure gate asserts the work is worth CI budget.
 - All required checks on the PR's `statusCheckRollup` are terminal-green for the current head. Any queued, in-progress, pending, failing, cancelled, timed-out, missing, or ambiguous required check blocks authority.
-- At least one current-head four-class review on an inspected surface (see `<review_inspection>`) has no unresolved `BLOCKING` or `NEEDS-ANSWER`.
+- At least one current-head three-severity review on an inspected surface (see `<review_inspection>`) has no unresolved `BLOCKING` or `DEBT`.
 - The latest pushed commit is at least five minutes old at evaluation time, so review automation has time to respond without shell polling.
 - `<branch_hygiene>` passes, including the upstream-safety check.
 - **For merge only:** PR state is `OPEN`, `isDraft` is false, the inspected head SHA matches the branch head fetched from origin, and the PR branch is rebased onto current `origin/<base>` or is a fast-forward descendant.
@@ -150,6 +151,8 @@ Both transitions are gated by the **PR authority gate**, evaluated at the moment
 
 - **Gate-green-autonomous (default).** Gate-green is sufficient authority — the consuming flow runs the action's command (`gh pr ready` for promotion, the project's merge command for merge) without a separate explicit human instruction.
 - **Overlay-requires-human.** Gate-green is necessary but not sufficient. The consuming flow emits the corresponding action token from `<action_tokens>` and waits for the operator's explicit instruction.
+
+**Reviewer-skipped-by-design (self-modifying-PR exception).** When `spec-tree-review / spec-tree-review` reports `conclusion: skipped` with cause "PR head differs from main" (GitHub Actions' identical-workflow-content gate), the review predicate is unmet. Post one PR-level comment containing exactly `<trigger-phrase> review` (e.g., `@claude review`) to fire the mention reviewer (which has no identical-content gate), emit `MENTION_REVIEW_NEEDED:<trigger-phrase>`, and on the next heartbeat treat that workflow's posted findings as the current-head three-severity review.
 
 **Post-ready follow-up rule.** GitHub does not auto-revert state on push. Default: `gh pr ready --undo <pr-number>` before any follow-up push; iterate while draft; the gate re-evaluates after the next push under the same authority model. The overlay's keep-ready signal forms may permit keeping the PR ready when the closure gate has just re-passed immediately before the follow-up push — in that case the follow-up push re-fires expensive CI exactly once with a fresh gate-passed signal.
 
@@ -189,47 +192,65 @@ Compare timestamps against the most recent push. Entries after that push are re-
 
 <review_classification>
 
-Every review finding — whether produced by a reviewer (outgoing feedback) or by an author triaging incoming feedback — is labeled with exactly one of four classes. The taxonomy is shared so reviewer output and author triage use the same vocabulary; nothing has to be translated between them.
+Every review finding — whether produced by a reviewer (outgoing feedback) or triaged by an author (incoming feedback) — carries two dimensions: **severity** (one of three) and **category** (one of six). The taxonomy is shared so output and triage use the same vocabulary; nothing has to be translated between them.
 
-| Class          | Receiver action             | Use when                                                                                                                                                         |
-| -------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `BLOCKING`     | Fix in this PR before merge | The PR introduces a correctness bug, security risk, data-loss risk, production-safety risk, broken required validation, secret exposure, or direct policy break. |
-| `NEEDS-ANSWER` | Answer before merge         | A required fact is missing from the diff or PR context, and the answer can clear the concern or convert it to `BLOCKING`.                                        |
-| `FOLLOW-UP`    | Track outside this PR       | The concern is valid, but fixing it would widen the PR.                                                                                                          |
-| `NOTE`         | No action expected          | Context, praise, explanation, or an observation that does not create work.                                                                                       |
+The canonical specification for this taxonomy is `REVIEW.template.md` at the repository root. Consumer repos fork it to `REVIEW.md` to activate repo-local overrides; absent a fork, this skill's defaults apply. The taxonomy below mirrors the template's defaults.
 
-`BLOCKING` and `NEEDS-ANSWER` drive the active PR loop. `FOLLOW-UP` items belong in a short summary and name the owning tracking location when retention is useful (e.g., `Track under: spx/.../ISSUES.md`). `NOTE` items are optional and must be omitted when they add noise.
+**Severity** (one of three):
 
-**Severity-rank labels MUST NOT replace the four classes.** No `P0` / `P1` / `P2` / `P3`, no `critical` / `high` / `medium` / `low`, no `minor` / `nit` headings. Risk words may appear inside rationale only when they add concrete evidence, never as a finding's primary label.
+| Severity    | Receiver action       | Use when                                                                                                                                                    |
+| ----------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `BLOCKING`  | Fix in this PR        | Merge-safety defect: if deployed, the changeset would create a deterministic issue or pose a risk.                                                          |
+| `DEBT`      | Fix in this PR        | Must-fix-eventually defect: does not jeopardize the product if shipped but accumulates technical debt.                                                      |
+| `FOLLOW-UP` | Track outside this PR | Out-of-scope finding: does not jeopardize the product if shipped and fixing it would require wider refactoring or scope that extends the PR's blast-radius. |
 
-**If a review has no `BLOCKING` or `NEEDS-ANSWER` items, say so directly.** Do not manufacture lower-priority findings to prove that review happened.
+**Category** (one of six), grouped by three axes:
+
+*What the code does vs. what it is supposed to do*
+
+- `consistency` — disagreement across layers (decisions / PDR / ADR ↔ spec ↔ tests ↔ implementation). Surface the disagreement; do not judge which side is right.
+- `security` — confidentiality, integrity, availability.
+- `performance` — unbounded loops, hot-path allocations, O(n²) traversals where O(n) suffices, synchronous I/O on async paths, and similar pessimisations that change the changeset's runtime characteristics under realistic load.
+
+*How we know it does what it is supposed to do*
+
+- `evidence` — inadequate coverage of declared assertions by tests or evals; unmaintainable tests (literals, magic numbers, test-owned constants, duplication); evals that no longer exercise the assertions they claim to.
+
+*How it does what it is supposed to do*
+
+- `standards` — adherence to CLAUDE.md and the rules declared in `standardizing-*` skills (naming conventions, command tokens, file structure, language idioms).
+- `architecture` — violation of structural principles declared by ADRs or PDRs (layer boundaries, separation of concerns, dependency directions, module-shape rules). A finding is an architecture one when the structure itself is at odds with a governance principle, even if every layer is internally consistent.
+
+**Label asymmetry by severity.** `BLOCKING` and `DEBT` both require an action in this PR and use `Reference:` + `Evidence:` + `Required:`. `FOLLOW-UP` requires only a tracking commitment elsewhere and uses `Reference:` + `Issue:` + `Track under:`.
+
+**No findings: say so directly.** When the changeset has no `BLOCKING` or `DEBT` findings, post a one-line comment saying so. NEVER invent lower-priority findings to prove the review happened.
+
+**Findings only — never open questions, never commentary.** A reviewer with a question frames it as a finding (e.g., "Evidence: cannot verify X from the changeset; if assumption Y holds, this breaks Z because …") rather than asking a question that waits for an answer. Questions add CI roundtrips a single-pass review cannot recover from. Praise, observations, and commentary that do not constitute findings are noise — omit them.
+
+**Forbidden taxonomies.** Severity-rank labels MUST NOT replace the three severities — no `P0` / `P1` / `P2` / `P3`, no `critical` / `high` / `medium` / `low`, no `minor` / `nit` headings. Risk words may appear inside rationale only when they add concrete evidence, never as a finding's primary label. Legacy class labels `NEEDS-ANSWER` and `NOTE` are forbidden — open questions are reframed as findings; commentary is omitted.
 
 Comment format examples:
 
 ```text
-BLOCKING [correctness]: path/to/file.py:42
-Evidence: The changed branch now raises on an empty profile list because ...
-Required before merge: Preserve the previous no-op behavior or add evidence that the new failure is intended.
+### BLOCKING [consistency]: path/to/file.py:42
+Reference: <quote the standard from CLAUDE.md, skills, governance from decisions (PDR/ADR), or assertion from specs>
+Evidence: <quote the diff or behavior and explain the disagreement between layers>
+Required: <concrete change>
 ```
 
 ```text
-NEEDS-ANSWER [scope]: path/to/file.py:108
-Evidence: The new helper duplicates logic in <other-module>, but the diff does not say why it cannot reuse it.
-Question: Is the duplication intentional? If not, reuse and drop the duplicate.
+### DEBT [standards]: path/to/file.py:97
+Reference: <quote the standard from CLAUDE.md, skills, governance from decisions (PDR/ADR), or assertion from specs>
+Evidence: <quote the diff or behavior and explain how it violates the standard>
+Required: <concrete change>
 ```
 
 ```text
-FOLLOW-UP [test-evidence]: spx/.../tests/test_x.py
-Evidence: The test covers the happy path but not rollback.
-Track under: spx/.../ISSUES.md.
+### FOLLOW-UP [architecture]: path/to/foo.compliance.test.ts
+Reference: <quote the standard from CLAUDE.md, skills, governance from decisions (PDR/ADR), or assertion from specs>
+Issue: <what is missing or worthy of improvement>
+Track under: <ISSUES.md file or product-specific issue tracker>
 ```
-
-```text
-NOTE [praise]: path/to/file.py:200
-The new error path is clearer than what was there. No action.
-```
-
-The bracketed dimension names the concern category and is free-form.
 
 </review_classification>
 
@@ -237,19 +258,20 @@ The bracketed dimension names the concern category and is free-form.
 
 The managing flow emits exactly one of these tokens per heartbeat pass when no autonomous action fires. An autonomous fire (promotion under gate-green-autonomous; merge under gate-green-autonomous) runs the command directly and does not emit a token.
 
-| Token                      | Emitted when                                                                                                                                       |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `WAIT_FOR_CHECKS`          | Required checks are running, queued, pending, or skipped-required; heartbeat will re-fire.                                                         |
-| `WAIT_FOR_REVIEW`          | Checks green; no current-head four-class review yet on any inspected surface.                                                                      |
-| `WAIT_FOR_REVIEW_WINDOW`   | Checks and review present, but five minutes have not elapsed since the latest push.                                                                |
-| `FIX_BLOCKING:<item>`      | At least one `BLOCKING` item remains.                                                                                                              |
-| `ANSWER_NEEDED:<item>`     | At least one `NEEDS-ANSWER` item remains.                                                                                                          |
-| `MARK_READY`               | Promotion-time predicates pass under overlay-requires-human draft-promotion authority; awaiting the operator's explicit promotion instruction.     |
-| `AWAIT_MERGE_INSTRUCTION`  | Merge predicates pass under overlay-requires-human merge authority; awaiting the operator's explicit merge instruction.                            |
-| `PRODUCTION_HOLD:<reason>` | PR is project-recognized as production-class; autonomous authority is withheld for both actions regardless of other predicates and overlay topics. |
-| `MERGE_BLOCKED:<reason>`   | Merge gate failed for a concrete reason not covered by another token.                                                                              |
-| `SYNC_BASE`                | Base branch has advanced; rebase needed before further action.                                                                                     |
-| `POST_MERGE_VERIFY`        | PR merged; run post-merge verification per the project's Git workflow.                                                                             |
+| Token                                    | Emitted when                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `WAIT_FOR_CHECKS`                        | Required checks are running, queued, pending, or skipped-required; heartbeat will re-fire.                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `WAIT_FOR_REVIEW`                        | Checks green; no current-head three-severity review yet on any inspected surface.                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `WAIT_FOR_REVIEW_WINDOW`                 | Checks and review present, but five minutes have not elapsed since the latest push.                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `FIX_BLOCKING:<item>`                    | At least one `BLOCKING` item remains.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `FIX_DEBT:<item>`                        | At least one `DEBT` item remains. Like `BLOCKING`, requires fix-in-this-PR; the separate token preserves the severity distinction for triage.                                                                                                                                                                                                                                                                                                                                                                          |
+| `MARK_READY`                             | Promotion-time predicates pass under overlay-requires-human draft-promotion authority; awaiting the operator's explicit promotion instruction.                                                                                                                                                                                                                                                                                                                                                                         |
+| `AWAIT_MERGE_INSTRUCTION`                | Merge predicates pass under overlay-requires-human merge authority; awaiting the operator's explicit merge instruction.                                                                                                                                                                                                                                                                                                                                                                                                |
+| `MENTION_REVIEW_NEEDED:<trigger-phrase>` | Auto-review job intentionally skipped (e.g., the PR modifies the reviewer's own workflow file, triggering the GitHub Actions "head differs from main" security skip). Post one PR-level comment containing exactly `<trigger-phrase> review` to fire the mention-triggered reviewer (which has no identical-content gate); reschedule the heartbeat to await its findings. The `review` suffix is the keyword the mention reviewer matches on — posting only the trigger phrase without it does not fire the reviewer. |
+| `PRODUCTION_HOLD:<reason>`               | PR is project-recognized as production-class; autonomous authority is withheld for both actions regardless of other predicates and overlay topics.                                                                                                                                                                                                                                                                                                                                                                     |
+| `MERGE_BLOCKED:<reason>`                 | Merge gate failed for a concrete reason not covered by another token.                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `SYNC_BASE`                              | Base branch has advanced; rebase needed before further action.                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `POST_MERGE_VERIFY`                      | PR merged; run post-merge verification per the project's Git workflow.                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
 </action_tokens>
 
@@ -269,7 +291,7 @@ The two flows that consume this vocabulary satisfy their contracts when, at mini
 - PRs are opened as draft; promotion runs only when `<pr_authority_gate>` authorizes it under the project's draft-promotion-authority overlay.
 - Waiting for CI, review, or checks is delegated to the runtime timer per `<heartbeat>`.
 - All three surfaces in `<review_inspection>` are inspected after every push.
-- Every finding is labeled with one of `BLOCKING` / `NEEDS-ANSWER` / `FOLLOW-UP` / `NOTE` — never a severity rank.
+- Every finding is labeled with one of `BLOCKING` / `DEBT` / `FOLLOW-UP` — never a severity rank, never a legacy four-class label.
 - Merge runs only when the merge predicates of `<pr_authority_gate>` hold under the project's merge-authority overlay.
 - Each pass that does not fire an autonomous action emits exactly one token from `<action_tokens>`.
 - No `<self_reference>` violation appears in any artifact.
