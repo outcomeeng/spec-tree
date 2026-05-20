@@ -30,7 +30,7 @@ npx skills add outcomeeng/spec-tree
 | `interviewing` | ALWAYS invoke BEFORE asking the user anything while creating or modifying any artifact (spec, ADR, PDR, test, code, doc) |
 | `managing-pr` | managing an open pull request after PR creation — inspecting review and check state, classifying review feedback, posting findings, pushing follow-up commits, or deciding the next PR lifecycle action |
 | `opening-pr` | opening a pull request, creating a PR, or pushing a branch for review |
-| `picking-up` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another agent's saved context |
+| `picking-up` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another saved context |
 | `refactoring` | moving nodes, re-scoping content, or extracting shared enablers |
 | `refocusing` | running ad hoc commands, writing debug scripts, or writing code without a spec |
 | `reviewing-changes` | the wrapper agent reviews the working changes on a branch against a base ref |
