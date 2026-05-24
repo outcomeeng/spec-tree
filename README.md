@@ -37,7 +37,7 @@ npx skills add outcomeeng/spec-tree
 | `reviewing-pr` | Use when asked by the user to invoke the PR review skill |
 | `standardizing-merging` | Shared vocabulary for the PR flow — pre-flight predicates, branch topology gate, push command, PR authority gate, three-severity review classification, three review surfaces, action tokens, and repo-local overlay topics |
 | `testing` | ALWAYS invoke this skill before writing tests or when learning the testing approach |
-| `thread-store` | persisting or retrieving branch-scoped vetting records |
+| `thread-store` | persisting or retrieving branch-scoped verification records |
 | `understanding` | ALWAYS invoke this skill before any spec-tree work to load methodology |
 
 ## License
