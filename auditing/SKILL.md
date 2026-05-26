@@ -4,12 +4,6 @@ description: Use when asked by the user to invoke the audit skill
 allowed-tools: Read, Bash, Glob, Grep
 ---
 
-<codex_fallback>
-
-This skill references its bundled scripts as `${CLAUDE_SKILL_DIR}/scripts/<name>.py`. If `${CLAUDE_SKILL_DIR}` is not substituted to an absolute path (Codex or any runtime that does not expand it), resolve `scripts/` as a sibling directory of this `SKILL.md` file — `<directory containing this SKILL.md>/scripts/audit_orchestrator.py`, `.../scripts/verdict.py`, `.../scripts/aggregate_verdicts.py`, `.../scripts/emit_verdict.py`. Invoke them with `python3` (no `uv`); they are stdlib-only.
-
-</codex_fallback>
-
 <objective>
 
 Run a deterministic audit over a code scope: prepare (Phase 0), automated gates (Phase 1), tests (Phase 2), implementation review (Phase 3), test evidence (Phase 4), ADR/PDR compliance (Phase 5), and emit (Phase 6). Partition the scope by language, dispatch to the corresponding `auditing-{lang}*` skills, aggregate each partition's verdict via `aggregate_verdicts.py`, and emit one wrapper verdict whose `children` array carries the per-language dispatched verdicts. The orchestrator itself embeds zero language-specific knowledge beyond the dispatch template — language audits live in their own skills, this one composes them.
