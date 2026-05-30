@@ -11,7 +11,7 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (24)
+## Skills (25)
 
 | Skill | Description |
 | ----- | ----------- |
@@ -38,6 +38,7 @@ npx skills add outcomeeng/spec-tree
 | `standardizing-merging` | Shared vocabulary for the PR flow — pre-flight predicates, branch topology gate, push command, the three PR-authority gates (review / merge / production readiness), review classification, three review surfaces, action tokens, and repo-local overlay topics |
 | `testing` | ALWAYS invoke this skill before writing tests or when learning the testing approach |
 | `thread-store` | persisting or retrieving branch-scoped verification records |
+| `tracking-tasks` | Runtime task-tracking standards for skills that schedule heartbeats or timers |
 | `understanding` | ALWAYS invoke this skill before any spec-tree work to load methodology |
 
 ## License
