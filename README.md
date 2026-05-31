@@ -26,11 +26,11 @@ npx skills add outcomeeng/spec-tree
 | `contextualizing` | asking about status, progress, or what exists in the spec tree |
 | `decomposing` | breaking down, splitting, scoping, composing, or structuring spec tree nodes |
 | `github-actions` | the user asks about CI failures, workflow logs, GitHub Actions status, pipeline issues, or troubleshooting failed builds |
-| `handing-off` | ALWAYS invoke when closing an in-scope spec-tree session, deciding whether to create a handoff, writing a handoff, or preparing continuation context |
+| `handoff` | ALWAYS invoke when closing an in-scope spec-tree session, deciding whether to create a handoff, writing a handoff, or preparing continuation context |
 | `interviewing` | ALWAYS invoke BEFORE asking the user anything while creating or modifying any artifact (spec, ADR, PDR, test, code, doc) |
 | `managing-pr` | managing an open pull request after PR creation — inspecting review and check state, classifying review feedback, posting findings, pushing follow-up commits, or deciding the next PR lifecycle action |
 | `opening-pr` | opening a pull request, creating a PR, or pushing a branch for review |
-| `picking-up` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another saved context |
+| `pickup` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another saved context |
 | `pr` | the user asks to open a PR, ship a change, or take work from changes to merged, or runs /pr. It proposes a plan through the runtime's structured-question tool, then drives committing, opening, and merging through the governed lifecycle skills |
 | `refactoring` | moving nodes, re-scoping content, or extracting shared enablers |
 | `refocusing` | running ad hoc commands, writing debug scripts, or writing code without a spec |
