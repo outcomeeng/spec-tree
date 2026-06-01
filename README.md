@@ -11,14 +11,15 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (26)
+## Skills (27)
 
 | Skill | Description |
 | ----- | ----------- |
 | `aligning` | reviewing, auditing, or checking spec file conformance |
 | `applying` | ALWAYS invoke this skill before implementing any spec-tree work item |
+| `audit-adr` | Use when asked by the user to invoke the ADR audit skill |
+| `audit-pdr` | Use when asked by the user to invoke the PDR audit skill |
 | `auditing` | Use when asked by the user to invoke the audit skill |
-| `auditing-product-decisions` | Use when asked by the user to invoke the PDR audit skill |
 | `auditing-tests` | Use when asked by the user to invoke the test evidence audit skill |
 | `authoring` | adding, defining, or creating specs, decisions, or nodes |
 | `bootstrapping` | setting up a new spec tree or when /authoring detects an empty spx/ directory |
