@@ -17,8 +17,8 @@ npx skills add outcomeeng/spec-tree
 | ----- | ----------- |
 | `aligning` | reviewing, auditing, or checking spec file conformance |
 | `applying` | ALWAYS invoke this skill before implementing any spec-tree work item |
-| `audit-adr` | Use when asked by the user to invoke the ADR audit skill |
-| `audit-pdr` | Use when asked by the user to invoke the PDR audit skill |
+| `audit-adr` | ALWAYS use when auditing an ADR or after making changes to an ADR |
+| `audit-pdr` | ALWAYS use when auditing a PDR or after making changes to a PDR |
 | `auditing` | Use when asked by the user to invoke the audit skill |
 | `auditing-tests` | Use when asked by the user to invoke the test evidence audit skill |
 | `authoring` | adding, defining, or creating specs, decisions, or nodes |
