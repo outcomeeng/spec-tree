@@ -11,7 +11,7 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (27)
+## Skills (28)
 
 | Skill | Description |
 | ----- | ----------- |
@@ -23,6 +23,7 @@ npx skills add outcomeeng/spec-tree
 | `auditing-tests` | Use when asked by the user to invoke the test evidence audit skill |
 | `authoring` | adding, defining, or creating specs, decisions, or nodes |
 | `bootstrapping` | setting up a new spec tree or when /authoring detects an empty spx/ directory |
+| `changeset-scope` | deriving a changeset's base ref, branch slug, branch identity, or merge-base diff scope from git |
 | `committing-changes` | committing changes or when user says "commit" |
 | `contextualizing` | asking about status, progress, or what exists in the spec tree |
 | `decomposing` | breaking down, splitting, scoping, composing, or structuring spec tree nodes |
