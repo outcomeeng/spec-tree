@@ -11,7 +11,7 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (28)
+## Skills (29)
 
 | Skill | Description |
 | ----- | ----------- |
@@ -43,6 +43,7 @@ npx skills add outcomeeng/spec-tree
 | `thread-store` | persisting or retrieving branch-scoped verification records |
 | `tracking-tasks` | Runtime task-tracking standards for skills that schedule heartbeats or timers |
 | `understanding` | ALWAYS invoke this skill before any spec-tree work to load methodology |
+| `update-spx` | updating, refreshing, or scaffolding a product's spx/CLAUDE.md from the installed spec-tree template |
 
 ## License
 
