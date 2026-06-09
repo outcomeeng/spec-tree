@@ -31,10 +31,10 @@ npx skills add outcomeeng/spec-tree
 | `handoff` | ALWAYS invoke when closing an in-scope spec-tree session, deciding whether to create a handoff, writing a handoff, or preparing continuation context |
 | `init-worktrees` | setting up a repository's git worktree layout — classifying a checkout as a single tree, a bare-repo worktree pool, or non-compliant, and provisioning the bare-repo pool while carrying a prior checkout's .spx across |
 | `interviewing` | ALWAYS invoke BEFORE asking the user anything while creating or modifying any artifact (spec, ADR, PDR, test, code, doc) |
-| `managing-pr` | managing an open pull request after PR creation — inspecting review and check state, classifying review feedback, posting findings, pushing follow-up commits, or deciding the next PR lifecycle action |
-| `opening-pr` | opening a pull request, creating a PR, or pushing a branch for review |
+| `managing-pr` | Open-PR management protocol for review and check inspection, follow-up pushes, merge gates, and post-merge cleanup |
+| `opening-pr` | PR opening protocol for REVIEW_READINESS, branch push, ready PR creation, and first heartbeat |
 | `pickup` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another saved context |
-| `pr` | the user asks to open a PR, ship a change, or take work from changes to merged, or runs /pr. It proposes a plan through the runtime's structured-question tool, then drives committing, opening, and merging through the governed lifecycle skills |
+| `pr` | the user asks to ship, open or manage a PR, merge, or runs /pr |
 | `refactoring` | moving nodes, re-scoping content, or extracting shared enablers |
 | `refocusing` | running ad hoc commands, writing debug scripts, or writing code without a spec |
 | `reviewing-changes` | the wrapper agent reviews the working changes on a branch against a base ref |
