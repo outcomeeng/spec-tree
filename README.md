@@ -11,7 +11,7 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (30)
+## Skills (31)
 
 | Skill | Description |
 | ----- | ----------- |
@@ -28,13 +28,14 @@ npx skills add outcomeeng/spec-tree
 | `contextualizing` | asking about status, progress, or what exists in the spec tree |
 | `decomposing` | breaking down, splitting, scoping, composing, or structuring spec tree nodes |
 | `github-actions` | the user asks about CI failures, workflow logs, GitHub Actions status, pipeline issues, or troubleshooting failed builds |
+| `github-pr` | the user asks to open or manage a GitHub pull request, or runs /github-pr |
 | `handoff` | ALWAYS invoke when closing an in-scope spec-tree session, deciding whether to create a session file, writing a session file, or preparing continuation context |
 | `init-worktrees` | setting up a repository's git worktree layout — classifying a checkout as a single tree, a bare-repo worktree pool, or non-compliant, and provisioning the bare-repo pool while carrying a prior checkout's .spx across |
 | `interviewing` | ALWAYS invoke BEFORE asking the user anything while creating or modifying any artifact (spec, ADR, PDR, test, code, doc) |
 | `managing-pr` | Open-PR management protocol for review and check inspection, follow-up pushes, merge gates, and post-merge cleanup |
+| `merge` | the user asks to ship, integrate, or merge a changeset into trunk, or runs /merge |
 | `opening-pr` | PR opening protocol for REVIEW_READINESS, branch push, ready PR creation, and first heartbeat |
 | `pickup` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another saved context |
-| `pr` | the user asks to ship, open or manage a PR, merge, or runs /pr |
 | `refactoring` | moving nodes, re-scoping content, or extracting shared enablers |
 | `refocusing` | running ad hoc commands, writing debug scripts, or writing code without a spec |
 | `reviewing-changes` | the wrapper agent reviews the working changes on a branch against a base ref |
