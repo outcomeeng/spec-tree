@@ -19,7 +19,7 @@ npx skills add outcomeeng/spec-tree
 | `applying` | ALWAYS invoke this skill before implementing any spec-tree work item |
 | `audit-adr` | ALWAYS use when auditing an ADR or after making changes to an ADR |
 | `audit-pdr` | ALWAYS use when auditing a PDR or after making changes to a PDR |
-| `auditing` | Use when asked by the user to invoke the audit skill |
+| `auditing` | auditing a code scope end-to-end — a diff, a branch, or a commit — partitioning by language and emitting one structured verdict |
 | `auditing-tests` | Use when asked by the user to invoke the test evidence audit skill |
 | `authoring` | adding, defining, or creating specs, decisions, or nodes |
 | `bootstrapping` | setting up a new spec tree or when /authoring detects an empty spx/ directory |
@@ -38,7 +38,7 @@ npx skills add outcomeeng/spec-tree
 | `pickup` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another saved context |
 | `refactoring` | moving nodes, re-scoping content, or extracting shared enablers |
 | `refocusing` | running ad hoc commands, writing debug scripts, or writing code without a spec |
-| `reviewing-changes` | the wrapper agent reviews the working changes on a branch against a base ref |
+| `reviewing-changes` | reviewing working changes on a branch against a base ref |
 | `reviewing-pr` | Use when asked by the user to invoke the PR review skill |
 | `standardizing-merging` | Shared vocabulary for the PR flow — pre-flight predicates, branch topology gate, push command, the three PR-authority gates (review / merge / production readiness), review classification, three review surfaces, action tokens, and repo-local overlay topics |
 | `testing` | ALWAYS invoke this skill before writing tests or when learning the testing approach |
