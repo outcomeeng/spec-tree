@@ -20,7 +20,7 @@ npx skills add outcomeeng/spec-tree
 | `audit-adr` | ALWAYS use when auditing an ADR or after making changes to an ADR |
 | `audit-pdr` | ALWAYS use when auditing a PDR or after making changes to a PDR |
 | `auditing` | auditing a code scope end-to-end — a diff, a branch, or a commit — partitioning by language and emitting one structured verdict |
-| `auditing-tests` | Use when asked by the user to invoke the test evidence audit skill |
+| `auditing-tests` | auditing test evidence against spec assertions |
 | `authoring` | adding, defining, or creating specs, decisions, or nodes |
 | `bootstrapping` | setting up a new spec tree or when /authoring detects an empty spx/ directory |
 | `changeset-scope` | deriving a changeset's base ref, branch slug, branch identity, or merge-base diff scope from git |
