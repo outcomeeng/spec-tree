@@ -34,16 +34,16 @@ npx skills add outcomeeng/spec-tree
 | `interviewing` | ALWAYS invoke BEFORE asking the user anything while creating or modifying any artifact (spec, ADR, PDR, test, code, doc) |
 | `managing-pr` | Open-PR management protocol for review and check inspection, follow-up pushes, merge gates, and post-merge cleanup |
 | `merge` | the user asks to ship, integrate, or merge a changeset into the default branch on origin, or runs /merge |
-| `opening-pr` | PR opening protocol for REVIEW_READINESS, branch push, ready PR creation, and first heartbeat or no-timer PR-check handoff |
+| `opening-pr` | PR opening protocol for REVIEW_READINESS, branch push, ready PR creation, and first management pass |
 | `pickup` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another saved context |
 | `refactoring` | moving nodes, re-scoping content, or extracting shared enablers |
 | `refocusing` | running ad hoc commands, writing debug scripts, or writing code without a spec |
 | `reviewing-changes` | reviewing working changes on a branch against a base ref |
-| `reviewing-pr` | Use when asked by the user to invoke the PR review skill |
+| `reviewing-pr` | reviewing a pull request or when the user asks to invoke the PR review skill |
 | `standardizing-merging` | Shared vocabulary for the merge lifecycle — pre-flight predicates, branch topology gate, push command, the three authority gates (review / merge / production readiness), review classification, integration review surfaces, action tokens, delivered-value boundary, and repo-local overlay topics |
 | `testing` | ALWAYS invoke this skill before writing tests or when learning the testing approach |
 | `thread-store` | persisting or retrieving branch-scoped verification records |
-| `tracking-tasks` | Runtime task-tracking standards for skills that schedule heartbeats or timers, plus the no-timer PR-check fallback |
+| `tracking-tasks` | Runtime task-tracking standards for skills that schedule heartbeats or timers |
 | `understanding` | ALWAYS invoke this skill before any spec-tree work to load methodology |
 | `update-spx` | updating, refreshing, or scaffolding a product's spx/CLAUDE.md from the installed spec-tree template |
 
