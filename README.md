@@ -33,14 +33,14 @@ npx skills add outcomeeng/spec-tree
 | `init-worktrees` | setting up a repository's git worktree layout — classifying a checkout as a single tree, a bare-repo worktree pool, or non-compliant, and provisioning the bare-repo pool while pushing every local ref to the remote and carrying a prior checkout's gitignored state across |
 | `interviewing` | ALWAYS invoke BEFORE asking the user anything while creating or modifying any artifact (spec, ADR, PDR, test, code, doc) |
 | `managing-pr` | Open-PR management protocol for review and check inspection, follow-up pushes, merge gates, and post-merge cleanup |
-| `merge` | the user asks to ship, integrate, or merge a changeset into trunk, or runs /merge |
+| `merge` | the user asks to ship, integrate, or merge a changeset into the default branch on origin, or runs /merge |
 | `opening-pr` | PR opening protocol for REVIEW_READINESS, branch push, ready PR creation, and first heartbeat or no-timer PR-check handoff |
 | `pickup` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another saved context |
 | `refactoring` | moving nodes, re-scoping content, or extracting shared enablers |
 | `refocusing` | running ad hoc commands, writing debug scripts, or writing code without a spec |
 | `reviewing-changes` | reviewing working changes on a branch against a base ref |
 | `reviewing-pr` | Use when asked by the user to invoke the PR review skill |
-| `standardizing-merging` | Shared vocabulary for the PR flow — pre-flight predicates, branch topology gate, push command, the three PR-authority gates (review / merge / production readiness), review classification, three review surfaces, action tokens, and repo-local overlay topics |
+| `standardizing-merging` | Shared vocabulary for the merge lifecycle — pre-flight predicates, branch topology gate, push command, the three authority gates (review / merge / production readiness), review classification, integration review surfaces, action tokens, delivered-value boundary, and repo-local overlay topics |
 | `testing` | ALWAYS invoke this skill before writing tests or when learning the testing approach |
 | `thread-store` | persisting or retrieving branch-scoped verification records |
 | `tracking-tasks` | Runtime task-tracking standards for skills that schedule heartbeats or timers, plus the no-timer PR-check fallback |
