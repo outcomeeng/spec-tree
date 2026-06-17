@@ -18,8 +18,8 @@ npx skills add outcomeeng/spec-tree
 | `align` | reviewing, auditing, or checking spec file conformance |
 | `apply` | ALWAYS invoke this skill before implementing any spec-tree work item |
 | `audit` | auditing a code scope end-to-end — a diff, a branch, or a commit — partitioning by language and emitting one structured verdict |
-| `audit-adr` | ALWAYS use when auditing an ADR or after making changes to an ADR |
-| `audit-pdr` | ALWAYS use when auditing a PDR or after making changes to a PDR |
+| `audit-adr` | auditing an ADR or after making changes to an ADR |
+| `audit-pdr` | auditing a PDR or after making changes to a PDR |
 | `audit-tests` | auditing test evidence against spec assertions |
 | `author` | adding, defining, or creating specs, decisions, or nodes |
 | `bootstrap` | setting up a new spec tree or when /author detects an empty spx/ directory |
