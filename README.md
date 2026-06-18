@@ -11,7 +11,7 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (31)
+## Skills (32)
 
 | Skill | Description |
 | ----- | ----------- |
@@ -42,6 +42,7 @@ npx skills add outcomeeng/spec-tree
 | `review-changes` | reviewing working changes on a branch against a base ref |
 | `review-pr` | reviewing a pull request or when the user asks to invoke the PR review skill |
 | `scope-changeset` | deriving a changeset's base ref, branch slug, branch identity, or merge-base diff scope from git |
+| `sync-base` | ALWAYS invoke this skill to bring a branch behind its base current — before reading product truth, before verifying, and before every merge push |
 | `task-tracking-standards` | Runtime task-tracking standards for skills that schedule heartbeats or timers |
 | `test` | ALWAYS invoke this skill before writing tests or when learning the testing approach |
 | `understand` | ALWAYS invoke this skill before any spec-tree work to load methodology |
