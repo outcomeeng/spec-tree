@@ -11,7 +11,7 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (32)
+## Skills (33)
 
 | Skill | Description |
 | ----- | ----------- |
@@ -20,6 +20,7 @@ npx skills add outcomeeng/spec-tree
 | `audit` | Generic end-to-end code-scope audit orchestration preloaded by the auditor, audit-orchestrator, pr-reviewer, and pr-review-orchestrator agents |
 | `audit-adr` | ADR audit methodology preloaded by the adr-auditor agent |
 | `audit-pdr` | PDR audit methodology preloaded by the pdr-auditor agent |
+| `audit-specs` | Spec-node audit methodology preloaded by the spec-auditor agent |
 | `audit-tests` | Test-evidence audit methodology preloaded by the test-evidence-auditor agent |
 | `author` | adding, defining, or creating specs, decisions, or nodes |
 | `bootstrap` | setting up a new spec tree or when /author detects an empty spx/ directory |
