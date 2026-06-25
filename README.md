@@ -17,7 +17,7 @@ npx skills add outcomeeng/spec-tree
 | ----- | ----------- |
 | `align` | reviewing, auditing, or checking spec file conformance |
 | `apply` | ALWAYS invoke this skill before implementing any spec-tree work item |
-| `audit` | Generic end-to-end code-scope audit orchestration preloaded by the auditor, audit-orchestrator, pr-reviewer, and pr-review-orchestrator agents |
+| `audit` | Generic end-to-end code-scope audit orchestration preloaded by audit agents |
 | `audit-adr` | ADR audit methodology preloaded by the adr-auditor agent |
 | `audit-pdr` | PDR audit methodology preloaded by the pdr-auditor agent |
 | `audit-specs` | Spec-node audit methodology preloaded by the spec-auditor agent |
@@ -40,7 +40,7 @@ npx skills add outcomeeng/spec-tree
 | `open-pr` | PR opening protocol for REVIEW_READINESS, branch push, ready PR creation, and first management pass |
 | `pickup` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another saved context |
 | `plan-slice` | selecting the next executable slice to implement, planning the next delivery increment, or deciding which spec-tree nodes /apply should build next from an implementation plan |
-| `project-run-journal` | building a verification run's spx journal events, computing its rollup, or rendering its verdict from the run journal |
+| `project-run-journal` | Verification run-journal projection methodology loaded by audit and review skills when building spx journal events, computing rollups, or rendering verdict surfaces |
 | `refactor` | moving nodes, re-scoping content, or extracting shared enablers |
 | `refocus` | running ad hoc commands, writing debug scripts, or writing code without a spec |
 | `review-changes` | reviewing working changes on a branch against a base ref |
