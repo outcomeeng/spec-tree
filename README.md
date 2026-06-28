@@ -31,7 +31,7 @@ npx skills add outcomeeng/spec-tree
 | `handoff` | ALWAYS invoke to close a claimed spec-tree session — archive it, decide session-file creation, prepare continuation context — only once its goal is met with no continuation remaining, the user halted work, context is exhausted, or an external blocker prevents the next action |
 | `init-worktrees` | setting up a repository's git worktree layout — classifying a checkout as a single tree, a bare-repo worktree pool, or non-compliant, and provisioning the bare-repo pool while pushing every local ref to the remote and carrying a prior checkout's gitignored state across |
 | `inspect-github-actions` | the user asks about CI failures, workflow logs, GitHub Actions status, pipeline issues, or troubleshooting failed builds |
-| `interview` | ALWAYS invoke BEFORE asking the user anything while creating or modifying any artifact (spec, ADR, PDR, test, code, doc) |
+| `interview` | ALWAYS invoke before requirements interviews, draft approval, or unresolved scope/design questions while creating or modifying an artifact (spec, ADR, PDR, test, code, doc) |
 | `manage-github-pr` | the user asks to open or manage a GitHub pull request, or runs /manage-github-pr |
 | `manage-pr` | Open-PR management protocol for review and check inspection, follow-up pushes, merge gates, and post-merge cleanup |
 | `manage-thread-store` | persisting or retrieving branch-scoped verification records |
