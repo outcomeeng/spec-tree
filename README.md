@@ -11,7 +11,7 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (37)
+## Skills (36)
 
 | Skill | Description |
 | ----- | ----------- |
@@ -40,7 +40,6 @@ npx skills add outcomeeng/spec-tree
 | `open-pr` | PR opening protocol for REVIEW_READINESS, branch push, ready PR creation, and first management pass |
 | `pickup` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another saved context |
 | `plan-slice` | selecting the next executable slice to implement, planning the next delivery increment, or deciding which spec-tree nodes /apply should build next from an implementation plan |
-| `product-domain-shapes` | Product-domain shape classifier and examples loaded by bootstrap and decomposition skills when product dimensions, aggregate domains, concrete behavior slices, brownfield code, or code-shaped candidate areas must be separated |
 | `project-run-journal` | Verification run-journal projection methodology loaded by audit and review skills when building spx journal events, computing rollups, or rendering verdict surfaces |
 | `refactor` | moving nodes, re-scoping content, or extracting shared enablers |
 | `refocus` | running ad hoc commands, writing debug scripts, or writing code without a spec |
