@@ -51,7 +51,7 @@ npx skills add outcomeeng/spec-tree
 | `task-tracking-standards` | Runtime task-tracking standards for skills that schedule heartbeats or timers |
 | `test` | ALWAYS invoke this skill before writing tests or when learning the testing approach |
 | `understand` | ALWAYS invoke this skill at the beginning of each session, after every compaction, and before answering spec-tree workflow or session-continuity questions when the live SPEC_TREE_FOUNDATION marker is absent |
-| `update-spx` | manually regenerating, refreshing, or scaffolding a product's two spx-level guide files (spx/CLAUDE.md and spx/AGENTS.md) from the installed spec-tree template |
+| `update-spx` | manually regenerating, refreshing, or scaffolding a product's root CLAUDE.md and AGENTS.md managed Spec Tree sections from the installed spec-tree template |
 
 ## License
 
