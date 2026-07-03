@@ -3,9 +3,9 @@ template_version: "0.21.5"
 template_source: spec-tree
 ---
 
-# Spec Tree Guide
+# Spec Tree Instructions
 
-This guide explains WHEN to invoke spec-tree skills for this product. It is a **router** — the skills contain the HOW.
+These instructions explain WHEN to invoke spec-tree skills for this product. They are a **router** — the skills contain the HOW.
 
 ---
 
@@ -49,7 +49,7 @@ Review, audit, or quality check specs. Find contradictions or gaps.
 
 **BLOCKING REQUIREMENT**
 
-Every change destined for the default branch routes through `/merge`, the transport dispatcher — it classifies the changeset, selects the transport, and delegates. `/merge` reads `spx/local/merging.md` as a repo-local overlay **when that file is present**; the overlay is optional, so its absence is normal and not a blocker — `/merge` applies the default lifecycle. `spx/local/merging.md` is the one place repository-specific merge behavior belongs: never infer the transport from other docs when it is absent, and never edit this generated guide to change merge behavior — invoke `/merge` and let the lifecycle apply the defaults. The three authority gates, the delivered-value boundary, and the finding-disposition rule are transport-neutral and live in `/merging-standards`.
+Every change destined for the default branch routes through `/merge`, the transport dispatcher — it classifies the changeset, selects the transport, and delegates. `/merge` reads `spx/local/merging.md` as a repo-local overlay **when that file is present**; the overlay is optional, so its absence is normal and not a blocker — `/merge` applies the default lifecycle. `spx/local/merging.md` is the one place repository-specific merge behavior belongs: never infer the transport from other docs when it is absent, and never edit this generated instruction block to change merge behavior — invoke `/merge` and let the lifecycle apply the defaults. The three authority gates, the delivered-value boundary, and the finding-disposition rule are transport-neutral and live in `/merging-standards`.
 
 ## Stop Triggers
 
@@ -185,7 +185,7 @@ After a successful `changes-reviewer` result, invoke the `spec-tree:project-run-
 }
 ```
 
-**Use explicit prompts for audit agents.** The `message` field comes from the `multi_agent_v1.spawn_agent` schema. The guide owns the prompt content below for required verifier roles. Keep the prompt narrow: repository path, governed artifact paths, governing node or decision, deterministic verification state when relevant, audit task, and output shape. Do not ask the subagent to edit files.
+**Use explicit prompts for audit agents.** The `message` field comes from the `multi_agent_v1.spawn_agent` schema. This instruction block owns the prompt content below for required verifier roles. Keep the prompt narrow: repository path, governed artifact paths, governing node or decision, deterministic verification state when relevant, audit task, and output shape. Do not ask the subagent to edit files.
 
 Use this shape for a one-off implementation audit:
 
@@ -312,7 +312,7 @@ Per-language code, architecture, and test audits ship as `audit-{lang}*` skills 
 
 ## Test Naming Convention
 
-Test level is encoded in the filename. The `{evidence}` segment is chosen by `/test` routing from the assertion type: `scenario`, `mapping`, `conformance`, `property`, or `compliance`. Universal assertions use `mapping`, `conformance`, `property`, or `compliance`; a universal is never `scenario`. This guide renders only the languages listed in its `languages` frontmatter; `/update-spx` re-renders from the installed template when the methodology advances.
+Test level is encoded in the filename. The `{evidence}` segment is chosen by `/test` routing from the assertion type: `scenario`, `mapping`, `conformance`, `property`, or `compliance`. Universal assertions use `mapping`, `conformance`, `property`, or `compliance`; a universal is never `scenario`. This instruction block renders only the languages listed in its `languages` frontmatter; `/update-instruction-block` re-renders from the installed template when the methodology advances.
 
 <!-- lang:typescript -->
 
