@@ -35,7 +35,7 @@ npx skills add outcomeeng/spec-tree
 | `interview` | ALWAYS invoke before requirements interviews, draft approval, or unresolved scope/design questions while creating or modifying an artifact (spec, ADR, PDR, test, code, doc) |
 | `issue` | filing a follow-up into a spec-tree dependency's own session queue — for observations about the spec-tree plugin, the spx CLI, or another spec-tree dependency needing a change |
 | `manage-github-pr` | the user asks to open or manage a GitHub pull request, or runs /manage-github-pr |
-| `manage-pr` | Open-PR management protocol for review and check inspection, follow-up pushes, merge gates, and post-merge cleanup |
+| `manage-pr` | managing, waiting on, or continuing an open pull request lifecycle after a PR exists |
 | `manage-thread-store` | persisting or retrieving branch-scoped verification records |
 | `merge` | the user asks to ship, integrate, or merge a changeset into the default branch on origin, or runs /merge |
 | `merging-standards` | Shared vocabulary for the merge lifecycle — pre-flight predicates, branch topology gate, push command, authority gates, review classification, integration review surfaces, action tokens, delivered-value boundary, closeout, and repo-local overlay topics |
