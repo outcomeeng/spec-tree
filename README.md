@@ -39,7 +39,7 @@ npx skills add outcomeeng/spec-tree
 | `manage-thread-store` | persisting or retrieving branch-scoped verification records |
 | `merge` | the user asks to ship, integrate, or merge a changeset into the default branch on origin, or runs /merge |
 | `merging-standards` | Shared vocabulary for the merge lifecycle — pre-flight predicates, branch topology gate, push command, authority gates, review classification, integration review surfaces, action tokens, delivered-value boundary, closeout, and repo-local overlay topics |
-| `open-pr` | PR opening protocol for REVIEW_READINESS, branch push, ready PR creation, and first management pass |
+| `open-pr` | PR opening protocol for VERIFICATION_READINESS, branch push, ready PR creation, and first management pass |
 | `pickup` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another saved context |
 | `plan-slice` | selecting the next executable slice to implement, planning the next delivery increment, or deciding which spec-tree nodes /apply should build next from an implementation plan |
 | `project-run-journal` | Verification run-journal projection methodology loaded by audit and review skills when building spx journal events, computing rollups, or rendering verdict surfaces |
