@@ -1,7 +1,10 @@
 ---
-name: plan-slice
+name: slice
 description: >-
-  ALWAYS invoke this skill when selecting the next executable slice to implement, planning the next delivery increment, or deciding which spec-tree nodes /apply should build next from an implementation plan. NEVER choose the next nodes to implement by ad hoc selection — this skill scopes the slice to demonstrable value before /apply runs.
+  ALWAYS invoke this skill when selecting the next executable slice to implement
+  or deciding which spec-tree nodes /apply should build next from an
+  implementation plan. NEVER choose the next nodes by ad hoc selection — this
+  skill scopes an existing plan to demonstrable value before /apply runs.
 ---
 
 <objective>
@@ -36,6 +39,7 @@ Confirm with the operator:
 
 - The demonstrable business and user value the slice delivers — stated as what the operator will be shown working.
 - The node set that delivers it, and whether it spans one or several `/merge` cycles.
+- The observable path: actor, invocation, inputs, product behavior, persisted or externalized result, and inspection surface.
 
 </step>
 
@@ -44,12 +48,16 @@ Specify the selected slice fully:
 
 - List the node set as full paths from the product's `spx/` root, in the ascending index order `/apply` will run them. Never list ad hoc files — the slice lives in the durable map.
 - State the demonstrable-value statement the slice delivers.
+- State the invocation, input shape, behavior, persistence or side effect, inspection surface, first useful failure behavior, and verification gates.
+- Tie every dependency in the slice to the observable path. Infrastructure that does not enable the path belongs outside the slice.
 
 Specify later slices only where they constrain the current slice's architecture, interfaces, or constraints. Treat the rest of the program under the cone of uncertainty — naming a later slice's effect on a current interface is in scope; designing a later slice's internals is not.
 </step>
 
 <step number="5" name="Boundary check">
 Confirm the slice changes no durable tree structure. If selecting the slice surfaced a need to create, split, re-scope, or reindex a node, that is `/decompose` (structure) or `/author` (a new node) — stop, route there, and resume slice selection over the updated tree. Slice selection chooses an execution path across nodes that already exist; it never restructures them.
+
+Confirm that delivering the slice makes one real invocation more useful and inspectable than before. A dependency-ordered list of infrastructure without that observable path is not an executable slice.
 </step>
 
 <step number="6" name="Hand off to apply">
@@ -70,12 +78,11 @@ Hand the selected slice's node set to `/apply` as its work queue. `/apply` runs 
 
 <success_criteria>
 
-- [ ] `SPEC_TREE_FOUNDATION` marker present (Step 1)
-- [ ] `SPEC_TREE_CONTEXT` loaded over the candidate area (Step 2)
 - [ ] The slice's demonstrable business and user value is stated and confirmed with the operator
+- [ ] The slice names its actor, invocation, inputs, behavior, externalized result, inspection surface, failure behavior, and verification
+- [ ] Every dependency is justified by the observable path
 - [ ] The slice is expressed as an ordered node set of full paths, not a file list
 - [ ] Later slices are specified only where they constrain the current slice's architecture, interfaces, or constraints
 - [ ] No durable tree structure was created, split, re-scoped, or reindexed — any such need was routed to `/decompose` or `/author`
-- [ ] The slice's node set is handed to `/apply` as its work queue
 
 </success_criteria>
