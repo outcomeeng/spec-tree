@@ -11,15 +11,15 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (37)
+## Skills (36)
 
 | Skill | Description |
 | ----- | ----------- |
 | `align` | reviewing, auditing, or checking spec file conformance |
 | `apply` | ALWAYS invoke this skill before implementing any spec-tree work item |
-| `audit` | Generic end-to-end code-scope audit orchestration preloaded by audit agents |
 | `audit-adr` | ADR audit methodology preloaded by the adr-auditor agent |
 | `audit-eval-evidence` | Eval-evidence audit methodology preloaded by the eval-evidence-auditor agent |
+| `audit-implementation` | Implementation-audit orchestration methodology preloaded by the implementation-auditor agent |
 | `audit-pdr` | PDR audit methodology preloaded by the pdr-auditor agent |
 | `audit-specs` | Spec-node audit methodology preloaded by the spec-auditor agent |
 | `audit-tests` | Test-evidence audit methodology preloaded by the test-evidence-auditor agent |
@@ -36,7 +36,6 @@ npx skills add outcomeeng/spec-tree
 | `issue` | filing a follow-up into a spec-tree dependency's own session queue — for observations about the spec-tree plugin, the spx CLI, or another spec-tree dependency needing a change |
 | `manage-github-pr` | the user asks to open or manage a GitHub pull request, or runs /manage-github-pr |
 | `manage-pr` | managing, waiting on, or continuing an open pull request lifecycle after a PR exists |
-| `manage-thread-store` | persisting or retrieving branch-scoped verification records |
 | `merge` | the user asks to ship, integrate, or merge a changeset into the default branch on origin, or runs /merge |
 | `merging-standards` | Shared vocabulary for the merge lifecycle — pre-flight predicates, branch topology gate, push command, authority gates, review classification, integration review surfaces, action tokens, delivered-value boundary, closeout, and repo-local overlay topics |
 | `open-pr` | PR opening protocol for VERIFICATION_READINESS, branch push, ready PR creation, and first management pass |
