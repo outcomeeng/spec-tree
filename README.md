@@ -11,7 +11,7 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (36)
+## Skills (37)
 
 | Skill | Description |
 | ----- | ----------- |
@@ -51,6 +51,7 @@ npx skills add outcomeeng/spec-tree
 | `test` | ALWAYS invoke this skill before writing tests or when learning the testing approach |
 | `understand` | the live SPEC_TREE_FOUNDATION marker is absent before direct filesystem access under spx/ or before reading, searching, listing, or changing source or test files |
 | `update-instruction-block` | manually regenerating, refreshing, or scaffolding a product's root CLAUDE.md and AGENTS.md managed Spec Tree instruction surface from the installed spec-tree template, or reconciling a `shared` region that differs between the two files |
+| `wait-for-load` | ALWAYS invoke this skill before starting a resource-intensive local command or when host load is high |
 
 ## License
 

@@ -11,14 +11,14 @@ One shared standard for routing heartbeat and timer creation that keeps active r
 </objective>
 
 <reference_note>
-This is a reference skill. Skills that create, update, or delete a heartbeat or timer load it via the Skill tool; `<when_to_load>` names the moments. The heartbeat is the runtime tool; this skill owns the rules for using that tool. Do not load this skill for GitHub PR check/review waits governed by /merging-standards; those use `gh pr checks <pr-number> --watch --fail-fast --interval 30` directly.
+This is a reference skill. Skills that create, update, or delete a heartbeat or timer invoke it through the runtime's documented skill-composition surface; `<when_to_load>` names the moments. The heartbeat is the runtime tool; this skill owns the rules for using that tool. Do not load this skill for GitHub PR check/review waits governed by /merging-standards; those use `gh pr checks <pr-number> --watch --fail-fast --interval 30` directly.
 </reference_note>
 
 <when_to_load>
 Load `/task-tracking-standards` before any workflow:
 
 - creates or refreshes a heartbeat for a workflow whose governing skill has no foreground wait command
-- schedules a delayed rollout, host-load, or external-convergence re-check
+- schedules a delayed rollout or external-convergence re-check
 - deletes a heartbeat because acceptance is reached, the work item closed, or the only remaining action is operator approval
 - launches local background work the harness tracks — a backgrounded command or a subagent — and must choose between ending the turn for the completion notification and running it in the foreground with an adequate timeout
 
@@ -33,7 +33,7 @@ Load `/task-tracking-standards` before any workflow:
 - On wake-up, reload the named workflow skills, `/task-tracking-standards`, repository instructions, and authoritative state before acting. The reload is mandatory recovery: the protocol a skill carries cannot be assumed to have survived in context, so re-invoking restores it.
 - A failed check keeps the work active. Fetch failed logs once, classify the layer, then continue the repair loop or ask for the exact missing approval, credential, or judgment.
 - "Stop before retrying" means classify before rerunning the same external job. It never means abandon active work.
-- High host load or delayed external convergence requires an updated heartbeat before ending the turn when the governing workflow has no foreground wait command.
+- Delayed external convergence requires an updated heartbeat before ending the turn when the governing workflow has no foreground wait command.
 - Use one active heartbeat per work item. Refresh it instead of creating duplicates.
 - Delete a heartbeat only when no timer-backed repository action remains.
 
@@ -75,7 +75,7 @@ NEVER copy these into a heartbeat:
 </stale_context_boundary>
 
 <lifecycle>
-Create tracking when active work is blocked only by time, host load, external convergence, or a delayed repository-governed action whose governing skill has no foreground wait command.
+Create tracking when active work is blocked only by time, external convergence, or a delayed repository-governed action whose governing skill has no foreground wait command.
 
 Refresh tracking on a new commit, run id, work-item id, blocker, approval boundary, failure classification, or next repository action. Refreshing re-schedules the next fire and updates the pointer when the work-item id itself changes; it never writes the blocker, approval boundary, or failure classification into the prompt — that state is reconstructed on wake-up, and anything a later fire needs is written to a durable artifact.
 
@@ -89,21 +89,23 @@ Delete tracking when the PR is merged and every declared deploy or release phase
 <runtime_timer>
 Use the runtime timer or heartbeat tool when available. Select the tool by runtime:
 
-- **Claude Code:** `ScheduleWakeup` for a single delayed re-check, or `/loop` for recurring re-inspection. The prompt names the owning skill and the pointers it handles per `<heartbeat_payload>`; the wake-up reloads the skill and reconstructs state from the durable artifacts and live state. `ScheduleWakeup`'s instruction to "pass the same input verbatim each turn" means re-send that same skills-and-pointers prompt every fire; it never means expand it into a self-contained directive. Default delayed external-convergence cadence to four minutes (240 s) — under the five-minute prompt-cache TTL, so the next wake reuses the warm cache.
-- **Codex:** thread automation, which may open a fresh thread. The prompt names the repository, the skills to reload, and the pointers each handles, so a cold thread can resolve them; it does not carry the directive or the reasoning. Cadence is minute-based, typically every three minutes.
+- **Claude Code:** `ScheduleWakeup` for a single delayed re-check, or `/loop` for recurring re-inspection. The prompt names the owning skill and the pointers it handles per `<heartbeat_payload>`; the wake-up reloads the skill and reconstructs state from the durable artifacts and live state. `ScheduleWakeup`'s instruction to "pass the same input verbatim each turn" means re-send that same skills-and-pointers prompt every fire; it never means expand it into a self-contained directive.
+- **Codex:** use a timer or automation capability only when the active harness exposes and documents one. When none is exposed, report the exact external condition and durable work-item pointer, keep the work active, end the turn, and resume only from operator re-entry or an external completion notification. Never manufacture a shell timer.
 
 A scheduled heartbeat is the turn's continuation, not its close. When a scheduled wake-up is the next action, do not append a structured question to close the turn — the wake-up is the continuation. End such a turn by reporting status and the scheduled re-check, with no question and no trailing prose offer.
 
-For any thread heartbeat or automation tool, create or update the one work-item heartbeat — attached to the current thread when the work continues in the same conversation — at the owning workflow cadence above, following `<heartbeat_payload>` for prompt shape and `<lifecycle>` for the create, refresh, and delete triggers.
+For any documented and exposed runtime heartbeat or automation tool, create or update the one work-item heartbeat — attached to the current thread when the work continues in the same conversation — at the cadence supplied by the owning workflow or tool contract, following `<heartbeat_payload>` for prompt shape and `<lifecycle>` for the create, refresh, and delete triggers. This reference defines no runtime-specific default cadence.
 
 Never use shell `sleep`, `gh run watch`, `until`/`while` polling, a backgrounded watcher, or a background keep-alive as a timer substitute.
 
 </runtime_timer>
 
 <local_background_work>
-A runtime timer or heartbeat is for a wait the harness cannot observe — external state such as a rollout or host-load convergence. Local background work the harness tracks is the opposite case: it needs neither a timer nor a poll.
+A runtime timer or heartbeat is for a wait the harness cannot observe — external state such as a rollout or service convergence. Local background work the harness tracks is the opposite case: it needs neither a timer nor a poll.
 
-When a backgrounded shell command or a background subagent is launched, the harness re-invokes on its completion. Launch it, end the turn, and resume from the completion notification. Never create a heartbeat to re-check it — that duplicates the notification the harness already sends — and never poll it in-shell with a wait loop, a `sleep`, or a watch command. The in-shell poll is the unreaped process leak itself, not a way around it.
+When a backgrounded shell command or an ordinary background subagent is launched, the harness re-invokes on its completion. Launch it, end the turn, and resume from the completion notification. Never create a heartbeat to re-check it — that duplicates the notification the harness already sends — and never poll it in-shell with a wait loop, a `sleep`, or a watch command. The in-shell poll is the unreaped process leak itself, not a way around it.
+
+Typed verifier and reviewer agents are excluded from completion-notification handling. When the runtime router requires an exposed wait capability, collect their final result through that capability; treat any completion notification as supplemental rather than the planned result-collection mechanism.
 
 When the wait is short and ending the turn is overkill, run the command in the foreground with a timeout large enough to cover it — one bounded invocation, not a background launch followed by polling.
 
@@ -116,7 +118,7 @@ The prompt is the skills to reload plus the pointers each handles — nothing th
 Warm re-entry (a context that may still hold the prior conversation) — name the owning skill and its pointer:
 
 ```text
-/<owning-workflow-command> <work-item-pointer>
+Resume /<owning-workflow-command> (+ /task-tracking-standards) for <work-item-pointer>.
 ```
 
 Cold re-entry (a fresh thread) — name the repository, the skills to reload, and the pointers each handles, so they resolve without the prior conversation:
@@ -128,11 +130,31 @@ Resume <owning skill> (+ /task-tracking-standards) for <repo path> <work-item po
 Neither form carries the directive, the finding assessments, or the rationale; those are reconstructed, and anything the next fire needs lives in a durable artifact.
 </prompt_template>
 
+<failure_modes>
+**Duplicate background-work heartbeat**
+
+- **What happened:** Claude created a heartbeat for a background subagent that already produced a completion notification.
+- **Why it failed:** Both continuations fired for one work item, causing duplicate state inspection and competing next actions.
+- **How to avoid:** Use the harness completion notification for ordinary background work and the required typed wait capability for verifier or reviewer agents.
+
+**Stale heartbeat payload**
+
+- **What happened:** Claude copied the current directive, plan, and finding assessments into a heartbeat prompt.
+- **Why it failed:** The branch advanced before the wake-up, so the prompt resumed stale conclusions against a new head.
+- **How to avoid:** Carry only skills and pointers; write any required continuation facts to durable artifacts that the wake-up re-reads.
+
+**Local background polling**
+
+- **What happened:** Claude polled a local background command with repeated shell sleeps.
+- **Why it failed:** Every iteration added another monitored process tree until process and file-descriptor pressure disrupted unrelated work.
+- **How to avoid:** End the turn for the harness completion notification or run one foreground command with an adequate timeout.
+
+</failure_modes>
+
 <failure_handling>
 
 - Queued, in-progress, and pending states outside the PR-check lifecycle: report material changes, refresh the heartbeat, and continue on the next wake-up.
 - Failed, cancelled, or timed-out external work: fetch failed logs once, classify the failed layer, write the failed layer, log source, and next repair checkpoint to `PLAN.md` / `ISSUES.md` (never into the prompt), and keep the work active unless the next step requires operator approval, credentials, or judgment.
-- High host load: record the load condition, schedule the next load-aware checkpoint, and avoid starting heavy validation.
 - Missing approval: stop the work item at the approval boundary, delete heartbeat tracking, and ask with the identifiers, effect, and non-effect required by the owning workflow.
 
 </failure_handling>
