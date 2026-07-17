@@ -19,7 +19,7 @@ npx skills add outcomeeng/spec-tree
 | `apply` | ALWAYS invoke this skill before implementing any spec-tree work item |
 | `audit-adr` | ADR audit methodology preloaded by the adr-auditor agent |
 | `audit-eval-evidence` | Eval-evidence audit methodology preloaded by the eval-evidence-auditor agent |
-| `audit-implementation` | Implementation-audit orchestration methodology preloaded by the implementation-auditor agent |
+| `audit-implementation` | Implementation-audit orchestration methodology — discovers implementation languages, composes code, test, and architecture concern audits, and records one audit verification run |
 | `audit-pdr` | PDR audit methodology preloaded by the pdr-auditor agent |
 | `audit-specs` | Spec-node audit methodology preloaded by the spec-auditor agent |
 | `audit-tests` | Test-evidence audit methodology preloaded by the test-evidence-auditor agent |
@@ -44,7 +44,7 @@ npx skills add outcomeeng/spec-tree
 | `refactor` | moving nodes, re-scoping content, or extracting shared enablers |
 | `refocus` | running ad hoc commands, writing debug scripts, or writing code without a spec |
 | `review-changes` | reviewing working changes on a branch against a base ref |
-| `scope-changeset` | deriving a changeset's base ref, branch slug, branch identity, or merge-base diff scope from git |
+| `scope-changeset` | Canonical git-derived changeset primitives loaded by verification and lifecycle skills instead of re-implementing branch, base-ref, commit-identity, slug, or diff-scope derivation |
 | `slice` | selecting the next executable slice to implement or deciding which spec-tree nodes /apply should build next from an implementation plan |
 | `sync-base` | ALWAYS invoke this skill to bring a branch behind its base current — before reading product truth, before verifying, and before every merge push |
 | `task-tracking-standards` | Runtime task-tracking standards for skills that schedule heartbeats or timers |
