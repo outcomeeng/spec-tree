@@ -17,12 +17,12 @@ npx skills add outcomeeng/spec-tree
 | ----- | ----------- |
 | `align` | reviewing, auditing, or checking spec file conformance |
 | `apply` | ALWAYS invoke this skill before implementing any spec-tree work item |
-| `audit-adr` | ADR audit methodology preloaded by the adr-auditor agent |
-| `audit-eval-evidence` | Eval-evidence audit methodology preloaded by the eval-evidence-auditor agent |
+| `audit-adr` | ADR audit methodology — judges one ADR against the ADR evidence model, covering section structure, atemporal voice, and per-rule tag validity |
+| `audit-eval-evidence` | Eval-evidence audit methodology — judges whether a spec node's eval suite provides evidence its `[eval]` assertions are fulfilled, covering case quality, verdict schema fit, and producer coupling |
 | `audit-implementation` | Implementation-audit orchestration methodology — discovers implementation languages, composes code, test, and architecture concern audits, and records one audit verification run |
-| `audit-pdr` | PDR audit methodology preloaded by the pdr-auditor agent |
-| `audit-specs` | Spec-node audit methodology preloaded by the spec-auditor agent |
-| `audit-tests` | Test-evidence audit methodology preloaded by the test-evidence-auditor agent |
+| `audit-pdr` | PDR audit methodology — judges one PDR against the PDR evidence model, covering content classification, property quality, per-rule tag validity, atemporal voice, and consistency with ancestor decisions |
+| `audit-specs` | Spec-node audit methodology — judges one enabler or outcome spec against the node-spec form, covering section structure, atemporal voice, and per-assertion tag fitness |
+| `audit-tests` | Test-evidence audit methodology — judges whether a spec node's tests provide behavior-coupled evidence its assertions are fulfilled, covering source ownership, coupling, falsifiability, and full-chain coverage |
 | `author` | adding, defining, or creating specs, decisions, or nodes |
 | `bootstrap` | setting up a new spec tree or when /author detects an empty spx/ directory |
 | `commit-changes` | committing changes or when user says "commit" |
