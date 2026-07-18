@@ -11,13 +11,14 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (37)
+## Skills (38)
 
 | Skill | Description |
 | ----- | ----------- |
 | `align` | reviewing, auditing, or checking spec file conformance |
 | `apply` | ALWAYS invoke this skill before implementing any spec-tree work item |
 | `audit-adr` | ADR audit methodology — judges one ADR against the ADR evidence model, covering section structure, atemporal voice, and per-rule tag validity |
+| `audit-changeset-coherence` | Changeset-coherence audit methodology — judges whether an exact committed changeset forms one coherent review unit, covering semantic clustering, generated-source attribution, evidence completeness, and dependency-ordered review-unit sequencing |
 | `audit-eval-evidence` | Eval-evidence audit methodology — judges whether a spec node's eval suite provides evidence its `[eval]` assertions are fulfilled, covering case quality, verdict schema fit, and producer coupling |
 | `audit-implementation` | Implementation-audit orchestration methodology — discovers implementation languages, composes code, test, and architecture concern audits, and records one audit verification run |
 | `audit-pdr` | PDR audit methodology — judges one PDR against the PDR evidence model, covering content classification, property quality, per-rule tag validity, atemporal voice, and consistency with ancestor decisions |
