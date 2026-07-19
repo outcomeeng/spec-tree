@@ -1,5 +1,5 @@
 ---
-template_version: "0.26.0"
+template_version: "0.26.1"
 template_source: spec-tree
 ---
 
@@ -78,11 +78,11 @@ Move nodes, re-scope assertions, extract shared enablers, consolidate duplicates
 
 Review, audit, or quality check specs. Find contradictions or gaps.
 
-### Before resource-intensive local work -> `/wait-for-load`
+### Before tests, evals, builds, or validation -> `/wait-for-load`
 
-Invoke `/wait-for-load` before starting a resource-intensive local command. Run its bundled host-load waiter exactly once and collect that process's completion. The waiter owns CPU normalization, all three load-average observations, interval selection, sleeping, and rechecking; it remains silent until one terminal JSON result.
-
-Proceed only when the waiter exits zero with `status: "ready"` and `ready: true`. Never calculate a host-load delay, run repeated load commands, schedule a host-load heartbeat or timer, or substitute shell polling. A nonzero waiter result stops the heavy command and supplies the terminal reason to report.
+🛑 **STOP TRIGGER — Before any test, eval, build, or validation command, ALWAYS invoke `/wait-for-load`.**
+**ALWAYS** wait for `ready: true`, then run the selected command unchanged.
+**NEVER** use host load to reduce scope, workers, limits, deadlines, or verification.
 
 ### When shipping work to the default branch -> `/merge` (transport dispatcher)
 
@@ -205,7 +205,7 @@ Close a completed or no-longer-needed agent:
 }
 ```
 
-If `wait_agent` is not exposed, discover the multi-agent waiting tool with `tool_search`, then call the discovered wait tool. Accept a subagent notification only when the harness delivers it while the main conversation is working or waiting; do not choose notifications as the planned result-collection mechanism. Do not use web search, time lookup, shell polling, or `request_user_input` or any other tools as a substitute for result collection.
+In the main authoring conversation, if `wait_agent` is not exposed, discover the multi-agent waiting tool with `tool_search`, then call the discovered wait tool. Accept a subagent notification only when the harness delivers it while the main conversation is working or waiting; do not choose notifications as the planned result-collection mechanism. Do not use web search, time lookup, shell polling, or `request_user_input` or any other tools as a substitute for result collection.
 
 **Result collection for verifier and reviewer agents.** The exposed typed wait capability (`multi_agent_v1.wait_agent` in the examples below) is the planned result-collection mechanism. Read its returned JSON, keyed by the spawned subagent id under `status`. A timeout returns an empty `status` object and is not a result. A final status for the target id is the verifier result; when that final status carries a final message, that message is the verifier or reviewer output. Do not infer success from a subagent notification, a pending handle, or an open subagent id.
 
