@@ -11,7 +11,7 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (38)
+## Skills (39)
 
 | Skill | Description |
 | ----- | ----------- |
@@ -49,9 +49,10 @@ npx skills add outcomeeng/spec-tree
 | `slice` | selecting the next executable slice to implement or deciding which spec-tree nodes /apply should build next from an implementation plan |
 | `sync-base` | ALWAYS invoke this skill to bring a branch behind its base current — before reading product truth, before verifying, and before every merge push |
 | `task-tracking-standards` | Runtime task-tracking standards for skills that schedule heartbeats or timers |
-| `test` | ALWAYS invoke this skill before writing tests or when learning the testing approach |
+| `test` | ALWAYS invoke this skill before writing or repairing deterministic tests for a spec assertion, selecting a decision Testing rule's assertion type, or when learning the testing approach |
 | `understand` | the live SPEC_TREE_FOUNDATION marker is absent before direct filesystem access under spx/ or before reading, searching, listing, or changing source or test files |
 | `update-instruction-block` | manually regenerating, refreshing, or scaffolding a product's root CLAUDE.md and AGENTS.md managed Spec Tree instruction surface from the installed spec-tree template, or reconciling a `shared` region that differs between the two files |
+| `verify` | selecting or establishing evidence for spec assertions, decision verification rules, or a spec-tree scope |
 | `wait-for-load` | ALWAYS invoke this skill before starting a resource-intensive local command or when host load is high |
 
 ## License
