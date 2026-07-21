@@ -11,7 +11,7 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (39)
+## Skills (40)
 
 | Skill | Description |
 | ----- | ----------- |
@@ -23,7 +23,7 @@ npx skills add outcomeeng/spec-tree
 | `audit-implementation` | Implementation-audit orchestration methodology — discovers implementation languages, composes code, test, and architecture concern audits, and records one audit verification run |
 | `audit-pdr` | PDR audit methodology — judges one PDR against the PDR evidence model, covering content classification, property quality, per-rule tag validity, atemporal voice, and consistency with ancestor decisions |
 | `audit-specs` | Spec-node audit methodology — judges one enabler or outcome spec against the node-spec form, covering section structure, atemporal voice, and per-assertion tag fitness |
-| `audit-tests` | Test-evidence audit methodology — judges whether a spec node's tests provide behavior-coupled evidence its assertions are fulfilled, covering source ownership, coupling, falsifiability, and full-chain coverage |
+| `audit-tests` | Test-evidence audit methodology — judges whether a spec node's tests provide behavior-coupled evidence its assertions are fulfilled, covering predicate ownership, source ownership, coupling, falsifiability, and full-chain coverage |
 | `author` | adding, defining, or creating specs, decisions, or nodes |
 | `bootstrap` | setting up a new spec tree or when /author detects an empty spx/ directory |
 | `commit-changes` | committing changes or when user says "commit" |
@@ -50,6 +50,7 @@ npx skills add outcomeeng/spec-tree
 | `sync-base` | ALWAYS invoke this skill to bring a branch behind its base current — before reading product truth, before verifying, and before every merge push |
 | `task-tracking-standards` | Runtime task-tracking standards for skills that schedule heartbeats or timers |
 | `test` | ALWAYS invoke this skill before writing or repairing deterministic tests for a spec assertion, selecting a decision Testing rule's assertion type, or when learning the testing approach |
+| `test-evidence-standards` | Test-evidence seam, case-provenance, and oracle-independence standards enforced across test authoring and auditing |
 | `understand` | the live SPEC_TREE_FOUNDATION marker is absent before direct filesystem access under spx/ or before reading, searching, listing, or changing source or test files |
 | `update-instruction-block` | manually regenerating, refreshing, or scaffolding a product's root CLAUDE.md and AGENTS.md managed Spec Tree instruction surface from the installed spec-tree template, or reconciling a `shared` region that differs between the two files |
 | `verify` | selecting or establishing evidence for spec assertions, decision verification rules, or a spec-tree scope |
