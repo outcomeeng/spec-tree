@@ -11,7 +11,7 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (40)
+## Skills (41)
 
 | Skill | Description |
 | ----- | ----------- |
@@ -47,6 +47,7 @@ npx skills add outcomeeng/spec-tree
 | `review-changes` | reviewing working changes on a branch against a base ref |
 | `scope-changeset` | Canonical git-derived changeset primitives loaded by verification and lifecycle skills instead of re-implementing branch, base-ref, commit-identity, slug, or diff-scope derivation |
 | `slice` | selecting the next executable slice to implement or deciding which spec-tree nodes /apply should build next from an implementation plan |
+| `spec-tree-plugin` | ALWAYS invoke this skill to operate the spec-tree plugin's own lifecycle in a checkout — report its version, manage whatever checkout footprint this plugin owns on the running agent, and check that footprint |
 | `sync-base` | ALWAYS invoke this skill to bring a branch behind its base current — before reading product truth, before verifying, and before every merge push |
 | `task-tracking-standards` | Runtime task-tracking standards for skills that schedule heartbeats or timers |
 | `test` | ALWAYS invoke this skill before writing or repairing deterministic tests for a spec assertion, selecting a decision Testing rule's assertion type, or when learning the testing approach |
