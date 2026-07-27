@@ -39,7 +39,7 @@ npx skills add outcomeeng/spec-tree
 | `manage-pr` | managing, waiting on, or continuing an open pull request lifecycle after a PR exists |
 | `merge` | the user asks to ship, integrate, or merge a changeset into the default branch on origin, or runs /merge |
 | `merging-standards` | Shared merge-lifecycle invariants and routing for detailed preflight, branch, review, authority-gate, transport, and closeout policy |
-| `open-pr` | PR opening protocol for VERIFICATION_READINESS, branch push, ready PR creation, and first management pass |
+| `open-pr` | PR opening protocol for VERIFICATION_READINESS, branch push, ready PR creation, and the first management pass |
 | `pickup` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another saved context |
 | `project-run-journal` | Verification run-journal projection methodology loaded by audit and review skills when building spx journal events, computing rollups, or rendering verdict surfaces |
 | `refactor` | moving nodes, re-scoping content, or extracting shared enablers |
