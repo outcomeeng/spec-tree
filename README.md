@@ -42,7 +42,7 @@ npx skills add outcomeeng/spec-tree
 | `open-pr` | PR opening protocol for VERIFICATION_READINESS, branch push, ready PR creation, and the first management pass |
 | `pickup` | resuming prior spec-tree work, loading a handoff session, claiming queued session work, or continuing from another saved context |
 | `project-run-journal` | Verification run-journal projection methodology loaded by audit and review skills when building spx journal events, computing rollups, or rendering verdict surfaces |
-| `refactor` | moving nodes, re-scoping content, or extracting shared enablers |
+| `refactor` | moving nodes, re-scoping content, or extracting shared providers |
 | `refocus` | running ad hoc commands, writing debug scripts, or writing code without a spec |
 | `review-changes` | reviewing working changes on a branch against a base ref |
 | `scope-changeset` | Canonical git-derived changeset primitives loaded by verification and lifecycle skills instead of re-implementing branch, base-ref, commit-identity, slug, or diff-scope derivation |
