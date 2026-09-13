@@ -45,7 +45,7 @@ npx skills add outcomeeng/spec-tree
 | `refactor` | moving nodes, re-scoping content, or extracting shared providers |
 | `refocus` | running ad hoc commands, writing debug scripts, or writing code without a spec |
 | `review-changes` | reviewing working changes on a branch against a base ref |
-| `scope-changeset` | Canonical git-derived changeset primitives loaded by verification and lifecycle skills instead of re-implementing branch, base-ref, commit-identity, slug, or diff-scope derivation |
+| `scope-changeset` | Committed changeset endpoint identities and changed paths, resolved through the canonical Git scope capability |
 | `slice` | selecting the next executable slice to implement or deciding which spec-tree nodes /apply should build next from an implementation plan |
 | `spec-tree-plugin` | ALWAYS invoke this skill to operate the spec-tree plugin's own lifecycle — report its version and check or reconcile its agent-delivery footprint |
 | `sync-base` | ALWAYS invoke this skill to bring a branch behind its base current — before reading product truth, before verifying, and before every merge push |
