@@ -22,7 +22,7 @@ npx skills add outcomeeng/spec-tree
 | `audit-eval-evidence` | Eval-evidence audit methodology — judges whether a spec node's eval suite provides evidence its `[eval]` assertions are fulfilled, covering case quality, verdict schema fit, and producer coupling |
 | `audit-implementation` | Implementation audit methodology — judges a changeset's implementation against its governing decisions, specs, and language standards, covering per-language code, test, and architecture concerns, finding falsifiability, and completeness of the inspection |
 | `audit-pdr` | PDR audit methodology — judges one PDR against the PDR evidence model, covering content classification, property quality, per-rule tag validity, atemporal voice, and consistency with ancestor decisions |
-| `audit-specs` | Spec-node audit methodology — judges one enabler or outcome spec against the node-spec form, covering section structure, atemporal voice, and per-assertion tag fitness |
+| `audit-specs` | Spec-node audit methodology — judges one output or variant spec against the node-spec form, covering section structure, atemporal voice, and per-assertion tag fitness |
 | `audit-tests` | Test-evidence audit methodology — judges whether a spec node's tests provide behavior-coupled evidence its assertions are fulfilled, covering predicate ownership, source ownership, coupling, falsifiability, and full-chain coverage |
 | `author` | adding, defining, or creating specs, decisions, or nodes |
 | `bootstrap` | setting up a new spec tree or when /author detects an empty spx/ directory |
