@@ -11,13 +11,14 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (41)
+## Skills (44)
 
 | Skill | Description |
 | ----- | ----------- |
 | `align` | reviewing, auditing, or checking spec file conformance |
 | `apply` | ALWAYS invoke this skill before implementing any spec-tree work item |
 | `audit-adr` | ADR audit methodology — judges one ADR against the ADR evidence model, covering section structure, atemporal voice, and per-rule tag validity |
+| `audit-change` | Change record audit methodology — judges one local Change against shared record standards at its declared maturity and records the complete judgment through SPX file-scoped verification |
 | `audit-changeset-coherence` | Changeset-coherence audit methodology — judges whether an exact committed changeset forms one coherent review unit, covering semantic clustering, generated-source attribution, evidence completeness, and dependency-ordered review-unit sequencing |
 | `audit-eval-evidence` | Eval-evidence audit methodology — judges whether a spec node's eval suite provides evidence its `[eval]` assertions are fulfilled, covering case quality, verdict schema fit, and producer coupling |
 | `audit-implementation` | Implementation audit methodology — judges a changeset's implementation against its governing decisions, specs, and language standards, covering per-language code, test, and architecture concerns, finding falsifiability, and completeness of the inspection |
@@ -25,7 +26,9 @@ npx skills add outcomeeng/spec-tree
 | `audit-specs` | Spec-node audit methodology — judges one output or variant spec against the node-spec form, covering section structure, atemporal voice, and per-assertion tag fitness |
 | `audit-tests` | Test-evidence audit methodology — judges whether a spec node's tests provide behavior-coupled evidence its assertions are fulfilled, covering predicate ownership, source ownership, coupling, falsifiability, and full-chain coverage |
 | `author` | adding, defining, or creating specs, decisions, or nodes |
+| `author-change` | creating, interviewing, or revising an Outcome Engineering Change record |
 | `bootstrap` | setting up a new spec tree or when /author detects an empty spx/ directory |
+| `change-standards` | Change record standards for Output, maturity, lifecycle, refinement, and continuation |
 | `commit-changes` | committing changes or when user says "commit" |
 | `contextualize` | asking about status, progress, or what exists in the spec tree |
 | `decompose` | breaking down, splitting, scoping, composing, or structuring spec tree nodes |
