@@ -11,7 +11,7 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (44)
+## Skills (46)
 
 | Skill | Description |
 | ----- | ----------- |
@@ -35,6 +35,8 @@ npx skills add outcomeeng/spec-tree
 | `contextualize` | asking about status, progress, or what exists in the spec tree |
 | `decompose` | breaking down, splitting, scoping, composing, or structuring spec tree nodes |
 | `diagnose` | diagnosing the health of a spec-tree or spx environment, when checking whether the SessionStart hook fired for the current session, or when troubleshooting a missing session identity, worktree claim, or unreachable spx CLI |
+| `execute-change` | a session executes one claimed Executable Change as its Executor |
+| `implement-change` | Language-implementation workflow for one spec-tree node: the target language's installed architect, code, and simplify skills run in one session, invoked with a canonical node path |
 | `init-worktrees` | setting up a repository's git worktree layout — classifying a checkout as a single tree, a bare-repo worktree pool, or non-compliant, and provisioning the bare-repo pool while pushing every local ref to the remote and carrying a prior checkout's gitignored state across |
 | `inspect-github-actions` | the user asks about CI failures, workflow logs, GitHub Actions status, pipeline issues, or troubleshooting failed builds |
 | `interview` | ALWAYS invoke before requirements interviews, draft approval, or unresolved scope/design questions while creating or modifying an artifact (spec, ADR, PDR, test, code, doc) |
