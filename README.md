@@ -11,7 +11,7 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (47)
+## Skills (48)
 
 | Skill | Description |
 | ----- | ----------- |
@@ -45,6 +45,7 @@ npx skills add outcomeeng/spec-tree
 | `manage-pr` | managing, waiting on, or continuing an open pull request lifecycle after a PR exists |
 | `merge` | the user asks to ship, integrate, or merge a changeset into the default branch on origin, or runs /merge |
 | `merging-standards` | Shared merge-lifecycle invariants and routing for detailed preflight, branch, review, authority-gate, transport, and closeout policy |
+| `migrate-3-to-4` | converting the decision citations of a 3.x Spec Tree product to the tree-absolute Markdown links the 4.0 methodology requires, or when `spx` rejects a decision cited as a code span, a bare path, or a node-local link |
 | `open-pr` | PR opening protocol for VERIFICATION_READINESS, branch push, ready PR creation, and the first management pass |
 | `project-run-journal` | Verification run-journal projection methodology loaded by audit and review skills when building spx journal events, computing rollups, or rendering verdict surfaces |
 | `refactor` | moving nodes, re-scoping content, or extracting shared providers |
