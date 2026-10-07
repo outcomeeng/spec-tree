@@ -11,14 +11,14 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (46)
+## Skills (47)
 
 | Skill | Description |
 | ----- | ----------- |
 | `align` | reviewing, auditing, or checking spec file conformance |
 | `apply` | ALWAYS invoke this skill before implementing any spec-tree work item |
 | `audit-adr` | ADR audit methodology — judges one ADR against the ADR evidence model, covering section structure, atemporal voice, and per-rule tag validity |
-| `audit-change` | Change record audit methodology — judges one local Change against shared record standards at its declared maturity and records the complete judgment through SPX file-scoped verification |
+| `audit-change` | Change record audit methodology — judges one local Change in the Intent form against shared record standards at its declared maturity, reads its authority from the store, and records the complete judgment through SPX file-scoped verification |
 | `audit-changeset-coherence` | Changeset-coherence audit methodology — judges whether an exact committed changeset forms one coherent review unit, covering semantic clustering, generated-source attribution, evidence completeness, and dependency-ordered review-unit sequencing |
 | `audit-eval-evidence` | Eval-evidence audit methodology — judges whether a spec node's eval suite provides evidence its `[eval]` assertions are fulfilled, covering case quality, verdict schema fit, and producer coupling |
 | `audit-implementation` | Implementation audit methodology — judges a changeset's implementation against its governing decisions, specs, and language standards, covering per-language code, test, and architecture concerns, finding falsifiability, and completeness of the inspection |
@@ -26,12 +26,13 @@ npx skills add outcomeeng/spec-tree
 | `audit-specs` | Spec-node audit methodology — judges one output or variant spec against the node-spec form, covering section structure, atemporal voice, and per-assertion tag fitness |
 | `audit-tests` | Test-evidence audit methodology — judges whether a spec node's tests provide behavior-coupled evidence its assertions are fulfilled, covering predicate ownership, source ownership, coupling, falsifiability, and full-chain coverage |
 | `author` | adding, defining, or creating specs, decisions, or nodes |
-| `author-change` | creating, interviewing, or revising an Outcome Engineering Change record |
+| `author-change` | creating, refining, or revising an Outcome Engineering Change record, or when turning a request into one |
 | `bootstrap` | setting up a new spec tree or when /author detects an empty spx/ directory |
-| `change-standards` | Change record standards for Output, maturity, lifecycle, refinement, and continuation |
+| `change-standards` | Change record standards for Intent, maturity, lifecycle, authority, refinement, and continuation |
 | `claim-change` | claiming an Available Change from the declared Change store to hold it for refinement or execution |
 | `close-change` | a held Change reaches a terminal Lifecycle — Applied, Refined, or Abandoned — to write the terminal record, remove the holder, and close it in the declared store |
 | `commit-changes` | committing changes or when user says "commit" |
+| `confirm-change` | the Product's Maintainer confirms or rejects a Submitted Change — it posts the confirmation or rejection comment and moves the Change from Submitted to Available |
 | `contextualize` | asking about status, progress, or what exists in the spec tree |
 | `decompose` | breaking down, splitting, scoping, composing, or structuring spec tree nodes |
 | `diagnose` | diagnosing the health of a spec-tree or spx environment, when checking whether the SessionStart hook fired for the current session, or when troubleshooting a missing session identity, worktree claim, or unreachable spx CLI |
@@ -48,7 +49,7 @@ npx skills add outcomeeng/spec-tree
 | `project-run-journal` | Verification run-journal projection methodology loaded by audit and review skills when building spx journal events, computing rollups, or rendering verdict surfaces |
 | `refactor` | moving nodes, re-scoping content, or extracting shared providers |
 | `refocus` | running ad hoc commands or writing code without a spec inside a repository whose root contains `spx/` |
-| `release-change` | stopping work on a held Change so another agent can continue it — it writes the Handoff, removes the holder, and returns the Change to Available |
+| `release-change` | stopping work on a held Change so another agent can continue it — it writes the Handoff, removes the holder, and returns the Change to Available, or to Submitted when a refined record waits for the Product's Maintainer |
 | `review-changes` | reviewing working changes on a branch against a base ref |
 | `scope-changeset` | Committed changeset endpoint identities and changed paths, resolved through the canonical Git scope capability |
 | `slice` | selecting the next executable slice to implement or deciding which spec-tree nodes /apply should build next from an implementation plan |
