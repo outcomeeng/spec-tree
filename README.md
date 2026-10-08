@@ -60,7 +60,7 @@ npx skills add outcomeeng/spec-tree
 | `test` | ALWAYS invoke this skill before writing or repairing deterministic tests for a spec assertion, selecting a decision Testing rule's assertion type, or when learning the testing approach |
 | `test-evidence-standards` | Shared test-evidence standards — seam, case provenance, oracle independence, execution level, per-assertion-type artifact permissions, and the pre-authoring assertion-design record |
 | `understand` | the live SPEC_TREE_FOUNDATION marker is absent before direct filesystem access under spx/ or before reading, searching, listing, or changing source or test files |
-| `update-instruction-block` | manually regenerating, refreshing, or scaffolding a product's root CLAUDE.md and AGENTS.md managed Spec Tree instruction surface from the installed spec-tree template, or reconciling a `shared` region that differs between the two files |
+| `update-instruction-block` | manually regenerating, refreshing, or scaffolding the managed Spec Tree instruction surface of a product's two root instruction files, AGENTS.md and its sibling, from the installed spec-tree template, or reconciling a `shared` region that differs between the two files |
 | `verify` | selecting or establishing evidence for spec assertions, decision verification rules, or a spec-tree scope |
 | `wait-for-load` | ALWAYS invoke this skill before starting a resource-intensive local command or when host load is high |
 
