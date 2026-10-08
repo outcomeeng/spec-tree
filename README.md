@@ -11,7 +11,7 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (48)
+## Skills (49)
 
 | Skill | Description |
 | ----- | ----------- |
@@ -21,7 +21,7 @@ npx skills add outcomeeng/spec-tree
 | `audit-change` | Change record audit methodology — judges one local Change in the Intent form against shared record standards at its declared maturity, reads its authority from the store, and records the complete judgment through SPX file-scoped verification |
 | `audit-changeset-coherence` | Changeset-coherence audit methodology — judges whether an exact committed changeset forms one coherent review unit, covering semantic clustering, generated-source attribution, evidence completeness, and dependency-ordered review-unit sequencing |
 | `audit-eval-evidence` | Eval-evidence audit methodology — judges whether a spec node's eval suite provides evidence its `[eval]` assertions are fulfilled, covering case quality, verdict schema fit, and producer coupling |
-| `audit-implementation` | Implementation audit methodology — judges a changeset's implementation against its governing decisions, specs, and language standards, covering per-language code, test, and architecture concerns, finding falsifiability, and completeness of the inspection |
+| `audit-implementation` | Implementation audit methodology — judges a changeset's implementation against its governing decisions, specs, and the standards of each concern skill the artifact registry selects for its changed paths, covering code, test, and architecture concerns, finding falsifiability, and completeness of the inspection |
 | `audit-pdr` | PDR audit methodology — judges one PDR against the PDR evidence model, covering content classification, property quality, per-rule tag validity, atemporal voice, and consistency with ancestor decisions |
 | `audit-specs` | Spec-node audit methodology — judges one output or variant spec against the node-spec form, covering section structure, atemporal voice, and per-assertion tag fitness |
 | `audit-tests` | Test-evidence audit methodology — judges whether a spec node's tests provide behavior-coupled evidence its assertions are fulfilled, covering predicate ownership, source ownership, coupling, falsifiability, and full-chain coverage |
@@ -53,6 +53,7 @@ npx skills add outcomeeng/spec-tree
 | `release-change` | stopping work on a held Change so another agent can continue it — it writes the Handoff, removes the holder, and returns the Change to Available, or to Submitted when a refined record waits for the Product's Maintainer |
 | `review-changes` | reviewing working changes on a branch against a base ref |
 | `scope-changeset` | Committed changeset endpoint identities and changed paths, resolved through the canonical Git scope capability |
+| `select-artifacts` | The registered artifacts and audit skills each changed path selects, resolved through the artifact registry the build renders beside this skill's reader |
 | `slice` | selecting the next executable slice to implement or deciding which spec-tree nodes /apply should build next from an implementation plan |
 | `spec-tree-plugin` | ALWAYS invoke this skill to operate the spec-tree plugin's own lifecycle — report its version and check or reconcile its agent-delivery footprint |
 | `sync-base` | ALWAYS invoke this skill to bring a branch behind its base current — before reading product truth, before verifying, and before every merge push |
