@@ -30,7 +30,7 @@ npx skills add outcomeeng/spec-tree
 | `bootstrap` | setting up a new spec tree or when /author detects an empty spx/ directory |
 | `change-standards` | Change record standards for Intent, maturity, lifecycle, authority, refinement, and continuation |
 | `claim-change` | claiming an Available Change from the declared Change store to hold it for refinement or execution |
-| `close-change` | a held Change reaches a terminal Lifecycle — Applied, Refined, or Abandoned — to write the terminal record, remove the holder, and close it in the declared store |
+| `close-change` | a held Change reaches a terminal Lifecycle — Applied or Abandoned — to write the terminal record, remove the holder, and close it in the declared store |
 | `commit-changes` | committing changes or when user says "commit" |
 | `confirm-change` | the Product's Maintainer confirms or rejects a Submitted Change — it posts the confirmation or rejection comment and moves the Change from Submitted to Available |
 | `contextualize` | asking about status, progress, or what exists in the spec tree |
