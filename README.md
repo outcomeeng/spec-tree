@@ -33,7 +33,7 @@ npx skills add outcomeeng/spec-tree
 | `claim-change` | claiming an Available Change from the declared Change store to hold it for refinement or execution |
 | `close-change` | a held Change reaches a terminal Lifecycle — Applied or Abandoned — to write the terminal record, remove the holder, and close it in the declared store |
 | `commit-changes` | committing changes or when user says "commit" |
-| `confirm-change` | the Product's Maintainer confirms or rejects a Submitted Change — it posts the confirmation or rejection comment and moves the Change from Submitted to Available |
+| `confirm-change` | the Product's Maintainer confirms a Submitted Change — it moves the Change from Submitted to Available and posts no comment |
 | `contextualize` | asking about status, progress, or what exists in the spec tree |
 | `decompose` | breaking down, splitting, scoping, composing, or structuring spec tree nodes |
 | `diagnose` | diagnosing the health of a spec-tree or spx environment, when checking whether the SessionStart hook fired for the current session, or when troubleshooting a missing session identity, worktree claim, or unreachable spx CLI |
