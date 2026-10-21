@@ -11,7 +11,7 @@ Spec Tree methodology skills for Outcome Engineering
 npx skills add outcomeeng/spec-tree
 ```
 
-## Skills (50)
+## Skills (51)
 
 | Skill | Description |
 | ----- | ----------- |
@@ -52,6 +52,7 @@ npx skills add outcomeeng/spec-tree
 | `refactor` | moving nodes, re-scoping content, or extracting shared providers |
 | `refocus` | running ad hoc commands or writing code without a spec inside a repository whose root contains `spx/` |
 | `release-change` | stopping work on a held Change so another agent can continue it — it writes the Handoff, removes the holder, and returns the Change to Available, or to Submitted when a refined record waits for the Product's Maintainer |
+| `report-changes` | listing, reporting, or checking the open Changes in the Change store, such as which Changes are waiting, blocked, or claimed |
 | `review-changes` | reviewing working changes on a branch against a base ref |
 | `scope-changeset` | Committed changeset endpoint identities and changed paths, resolved through the canonical Git scope capability |
 | `select-artifacts` | The registered artifacts and audit skills each changed path selects, resolved through the artifact registry the build renders beside this skill's reader |
